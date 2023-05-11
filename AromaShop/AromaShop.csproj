@@ -15,4 +15,9 @@
     <PackageReference Include="Microsoft.EntityFrameworkCore.Tools" Version="7.0.5" />
   </ItemGroup>
 
+  <ItemGroup>
+    <ProjectReference Include="..\Aroma.Models\Aroma.Models.csproj" />
+    <ProjectReference Include="..\AromaShop.DataAccess\AromaShop.DataAccess.csproj" />
+  </ItemGroup>
+
 </Project>
