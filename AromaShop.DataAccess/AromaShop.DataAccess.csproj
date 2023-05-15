@@ -16,7 +16,7 @@
   </ItemGroup>
 
   <ItemGroup>
-    <ProjectReference Include="..\Aroma.Models\Aroma.Models.csproj" />
+    <ProjectReference Include="..\Aroma.Models\AromaShop.Models.csproj" />
   </ItemGroup>
 
 </Project>

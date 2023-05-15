@@ -7,7 +7,7 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 
-namespace Aroma.Models
+namespace AromaShop.Models
 {
     public class Product
     {
@@ -15,7 +15,7 @@ namespace Aroma.Models
         public int Id { get; set; }
 
         [Required]
-        public string Name { get; set; }
+        public string? Name { get; set; }
 
         public double Price { get; set; }
         public string? ImagePath { get; set; }
@@ -24,16 +24,14 @@ namespace Aroma.Models
         public string? Summary { get; set; }
         public string? Description { get; set; }
 
-        public int CategoryId { get; set; }
         [ForeignKey("CategoryId")]
-        public Category Category { get; set; }
+        public Category? Category { get; set; }
 
-        public int ColorId { get; set; }
-        [ForeignKey("ColorIdId")]
-        public Color Color { get; set; }
-
-        public int BrandId { get; set; }
         [ForeignKey("BrandId")]
-        public Brand Brand { get; set; }
+        public Brand? Brand { get; set; }
+
+        public List<ProductColor>? ProductColor { get; set; }
+
+        public List<ProductSpecification>? ProductSpecification { get; set; }
     }
 }

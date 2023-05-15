@@ -16,8 +16,12 @@
   </ItemGroup>
 
   <ItemGroup>
-    <ProjectReference Include="..\Aroma.Models\Aroma.Models.csproj" />
-    <ProjectReference Include="..\AromaShop.DataAccess\AromaShop.DataAccess.csproj" />
+    <ProjectReference Include="..\Aroma.Models\AromaShop.Models.csproj" />
+    <ProjectReference Include="..\AromaShop.Services\AromaShop.Services.csproj" />
+  </ItemGroup>
+
+  <ItemGroup>
+    <Folder Include="Areas\Admin\" />
   </ItemGroup>
 
 </Project>

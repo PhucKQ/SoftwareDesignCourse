@@ -7,22 +7,21 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 
-namespace Aroma.Models
+namespace AromaShop.Models
 {
     public class ProductSpecification
     {
-        [Key]
         public int Id { get; set; }
         public string? Description { get; set; }
 
         public int ProductId { get; set; }
+
         [ForeignKey("ProductId")]
-        [ValidateNever]
         public Product Product { get; set; }
 
-        public string SpecificationId { get; set; }
+        public int SpecificationId { get; set; }
+
         [ForeignKey("SpecificationId")]
-        [ValidateNever]
         public Specification Specification { get; set; }
     }
 }
