@@ -8,7 +8,8 @@ namespace AromaShop.Models.ViewModels
 {
     public class ProductDetailsViewModel
     {
-        public Product Product { get; set; }
-        public IEnumerable<ProductSpecification> ProductSpecification { get; set; }
+        public Product? Product { get; set; }
+        public IEnumerable<ProductSpecification>? ProductSpecification { get; set; }
+        public List<Product>? TopProducts { get; set; }
     }
 }
