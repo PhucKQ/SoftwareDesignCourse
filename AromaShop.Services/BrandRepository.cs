@@ -9,18 +9,18 @@ using System.Threading.Tasks;
 
 namespace AromaShop.Services
 {
-    public class ProductRepository : Repository<Product>, IProductRepository
+    public class BrandRepository : Repository<Brand>, IBrandRepository
     {
         private readonly ApplicationDbContext _db;
 
-        public ProductRepository(ApplicationDbContext db) : base(db)
+        public BrandRepository(ApplicationDbContext db) : base(db)
         {
             _db = db;
         }
 
-        public void Update(Product obj)
+        public void Update(Brand obj)
         {
-            _db.Products.Update(obj);
+            _db.Brands.Update(obj);
         }
     }
 }

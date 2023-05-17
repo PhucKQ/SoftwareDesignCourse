@@ -13,5 +13,8 @@ namespace AromaShop.Models
         public string? ImagePath { get; set; }
 
         public List<ProductColor>? ProductColor { get; set; }
+
+        [NotMapped]
+        public int Count { get; set; }
     }
 }

@@ -1,4 +1,5 @@
 ﻿using System.ComponentModel.DataAnnotations;
+using System.ComponentModel.DataAnnotations.Schema;
 
 namespace AromaShop.Models
 {
@@ -10,5 +11,8 @@ namespace AromaShop.Models
         public string? Name { get; set; }
         public string? Summary { get; set; }
         public string? ImagePath { get; set; }
+
+        [NotMapped]
+        public int Count { get; set; }
     }
 }

@@ -20,6 +20,7 @@ namespace AromaShop.Controllers
 
         public IActionResult Index()
         {
+            ViewBag.location = "home";
             // get trending products
             IEnumerable<Product> trendingProducts = _unitOfWork.Product.GetAll(includeProperties: "Category")
                 .OrderByDescending(t => t.OverallReview).Take(8).ToList();
@@ -53,6 +54,13 @@ namespace AromaShop.Controllers
             };
             
             return View(productDetailsVM);
+        }
+
+        public IActionResult Contact()
+        {
+            ViewBag.location = "contact";
+
+            return View();
         }
 
         [ResponseCache(Duration = 0, Location = ResponseCacheLocation.None, NoStore = true)]
