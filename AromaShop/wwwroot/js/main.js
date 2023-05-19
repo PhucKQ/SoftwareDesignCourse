@@ -89,7 +89,7 @@ $(function() {
     noUiSlider.create(nonLinearSlider, {
         connect: true,
         behaviour: 'tap',
-        start: [ 20, 80 ],
+        start: [ urlParams.get('min'), urlParams.get('max') ],
         range: {
             // Starting at 500, step the value by 500,
             // until 4000 is reached. From there, step by 1000.

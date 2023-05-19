@@ -1,0 +1,21 @@
+﻿
+@{ int k = 0; }
+@for (int i = 0; i < 4; i++)
+{
+    <div class="col-sm-6 col-xl-3 mb-4 mb-xl-0">
+
+        <div class="single-search-product-wrapper">
+            @for (int j = 0; j < 3; j++)
+            {
+                <div class="single-search-product d-flex">
+                    <a asp-action="Details" asp-route-productId="@Model.TopProducts[k].Id"><img src="@Model.TopProducts[k].ImagePath" alt=""></a>
+                    <div class="desc">
+                        <a asp-action="Details" asp-route-productId="@Model.TopProducts[k].Id" class="title text-decoration-none">@Model.TopProducts[k].Name</a>
+                        <div class="price">@Model.TopProducts[k].Price.ToString("c")</div>
+                    </div>
+                </div>
+                k++;
+            }
+        </div>
+    </div>
+}

@@ -18,6 +18,7 @@ namespace AromaShop.Services
 
         public ISpecificationRepository Specification { get; private set; }
         public IProductSpecificationRepository ProductSpecification { get; private set; }
+        public IProductColorRepository ProductColor { get; private set; }
 
         public UnitOfWork(ApplicationDbContext db)
         {
@@ -28,6 +29,7 @@ namespace AromaShop.Services
             Brand = new BrandRepository(_db);
             Color = new ColorRepository(_db);
             Category = new CategoryRepository(_db);
+            ProductColor = new ProductColorRepository(_db);
         }
 
 

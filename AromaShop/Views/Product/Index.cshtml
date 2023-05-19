@@ -1,0 +1,281 @@
+﻿@model ProductViewModel
+<!-- ================ start banner area ================= -->
+<section class="blog-banner-area" id="category">
+    <div class="container h-100">
+        <div class="blog-banner">
+            <div class="text-center">
+                <h1>Shop Category</h1>
+                <nav aria-label="breadcrumb" class="banner-breadcrumb">
+                    <ol class="breadcrumb">
+                        <li class="breadcrumb-item"><a asp-controller="Home" asp-action="Index">Home</a></li>
+                        <li class="breadcrumb-item active" aria-current="page">Shop Category</li>
+                    </ol>
+                </nav>
+            </div>
+        </div>
+    </div>
+</section>
+<!-- ================ end banner area ================= -->
+<!-- ================ category section start ================= -->
+<section class="section-margin--small mb-5">
+    <div class="container">
+        <div class="row">
+            <div class="col-xl-3 col-lg-4 col-md-5">
+                <div class="sidebar-categories">
+                    <div class="head">Browse Categories</div>
+                    <ul class="main-categories">
+                        <li class="common-filter">
+                            <form action="#">
+                                <ul>
+                                    @foreach (var category in Model.Categories)
+                                    {
+                                        <li class="filter-list">
+                                            <input class="pixel-radio" type="radio" id="category@(category.Id)" name="category" 
+                                                   onclick="selectParam('category', @category.Id, true)">
+                                            <label for="category@(category.Id)">@category.Name<span> (@category.Count)</span>
+                                            </label>
+                                        </li>
+                                    }
+                                </ul>
+                            </form>
+                        </li>
+                    </ul>
+                </div>
+                <div class="sidebar-filter">
+                    <div class="top-filter-head">Product Filters</div>
+                    <div class="common-filter">
+                        <div class="head">Brands</div>
+                        <form action="#">
+                            <ul>
+                                @foreach (var brand in Model.Brands)
+                                {
+                                    <li class="filter-list">
+                                        <input class="pixel-radio" type="radio" id="brand(@brand.Id)" name="brand" 
+                                               onclick="selectParam('brand', @brand.Id)">
+                                        <label for="brand(@brand.Id)">@brand.Name<span>(@brand.Count)</span>
+                                        </label>
+                                    </li>
+                                }
+                            </ul>
+                        </form>
+                    </div>
+                    <div class="common-filter">
+                        <div class="head">Color</div>
+                        <form action="#">
+                            <ul>
+                                @foreach (var color in Model.Colors)
+                                {
+                                    <li class="filter-list">
+                                        <input class="pixel-radio" type="radio" id="color(@color.Id)" name="color" 
+                                               onclick="selectParam('color', @color.Id)">
+                                        <label for="color(@color.Id)">@color.Name<span>(@color.Count)</span>
+                                        </label>
+                                    </li>
+                                }
+                            </ul>
+                        </form>
+                    </div>
+                    <div class="common-filter">
+                        <div class="head">Price</div>
+                        <div class="price-range-area">
+                            <div id="price-range"></div>
+                            <div class="value-wrapper d-flex">
+                                <div class="price">Price:</div>
+                                <span>$</span>
+                                <div id="lower-value"></div>
+                                <div class="to">to</div>
+                                <span>$</span>
+                                <div id="upper-value"></div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+            <div class="col-xl-9 col-lg-8 col-md-7">
+                <!-- Start Filter Bar -->
+                <div class="filter-bar d-flex flex-wrap align-items-center">
+                    @*<div class="mr-auto d-flex flex-fill">
+            @{ if (ViewData["SortOrder"] == null) ViewData["SortOrder"] = ""; }
+            <form asp-controller="Product" asp-action="Index" method="get">
+                <div class="row">
+                    <div class="sorting">
+                        <select name="sortOrder" onchange="this.form.submit()">
+                            <option value="" selected="@(ViewData["SortOrder"].ToString() == "")">Default</option>
+                            <option value="top" selected="@(ViewData["SortOrder"].ToString() == "top")">Top seller</option>
+                            <option value="price" selected="@(ViewData["SortOrder"].ToString() == "price")">Price (Low to High)</option>
+                            <option value="price_desc" selected="@(ViewData["SortOrder"].ToString() == "price_desc")">Price (High to Low)</option>
+                        </select>
+                    </div>
+
+                    <div class="sorting">
+                        <select name="pageSize" onchange="this.form.submit()">
+                            <option value="9" selected="@(ViewData["PageSize"].ToString() == "9")">Show 9</option>
+                            <option value="18" selected="@(ViewData["PageSize"].ToString() == "18")">Show 18</option>
+                            <option value="36" selected="@(ViewData["PageSize"].ToString() == "36")">Show 36</option>
+                        </select>
+                    </div>
+                </div>
+            </form>
+        </div>*@
+                    @*<div>
+            <a asp-action="Index" asp-route-sortOrder="@ViewData["SortOrder"]">asc</a>
+            <a asp-action="Index" asp-route-sortOrder="@ViewData["SortOrder"]">desc</a>
+        </div>*@
+                    <div class="sorting">
+                        <select id="sort" onchange="selectParam('sort', this.value)">
+                            <option value="name">Default sorting by name</option>
+                            <option value="price">Sorting by price (low to high)</option>
+                            <option value="price_desc">Sorting by price (high to low)</option>
+                        </select>
+                    </div>
+                    <div class="sorting mr-auto">
+                        <select id="limit" onchange="selectParam('limit', this.value)">
+                            <option value="9">Show 9</option>
+                            <option value="18">Show 18</option>
+                            <option value="36">Show 36</option>
+                        </select>
+                    </div>
+                    <div>
+                        <form asp-action="Index" method="get">
+                            <div class="input-group filter-bar-search">
+                                <input type="text" placeholder="Search" name="search" value="@ViewData["CurrentFilter"]">
+                                <div class="input-group-append">
+                                    <button type="submit"><i class="ti-search"></i></button>
+                                </div>
+                            </div>
+                        </form>
+                    </div>
+                </div>
+                <!-- End Filter Bar -->
+                <!-- Start Best Seller -->
+                <section class="lattest-product-area pb-40 category-list">
+                    <div class="row">
+                        @foreach (var item in Model.PaginatedProducts)
+                        {
+                            <div class="col-md-6 col-lg-4">
+                                <div class="card text-center card-product">
+                                    <div class="card-product__img">
+                                        <img class="card-img" src="@item.ImagePath" alt="">
+                                        <ul class="card-product__imgOverlay">
+                                            <li><button><i class="ti-search"></i></button></li>
+                                            <li><button><i class="ti-shopping-cart"></i></button></li>
+                                            <li><button><i class="ti-heart"></i></button></li>
+                                        </ul>
+                                    </div>
+                                    <div class="card-body">
+                                        <p>@item.Category.Name</p>
+                                        <h4 class="card-product__title">
+                                            <a asp-controller="Product" asp-action="Details" asp-route-productId="@item.Id">@item.Name</a>
+                                        </h4>
+                                        <p class="card-product__price">$@item.Price</p>
+                                    </div>
+                                </div>
+                            </div>
+                        }
+                    </div>
+
+                    <!-- Pagination -->
+                    <div class="row justify-content-center">
+                        @{
+                            var disablePrevious = !Model.PaginatedProducts.HasPreviousPage ? "disabled" : "";
+                            var disableNext = !Model.PaginatedProducts.HasNextPage ? "disabled" : "";
+                        }
+                        <nav aria-label="Page navigation example" id="pagination">
+                            <ul class="pagination">
+                                <li class="page-item  @disablePrevious"><a class="page-link" asp-route-page="@(Model.PaginatedProducts.PageIndex - 1)">Previous</a></li>
+                                @for (int i = 1; i <= Model.PaginatedProducts.TotalPages; i++)
+                                {
+                                    <li @Html.Raw(Model.PaginatedProducts.PageIndex == i ? "class=\"page-item active\"" : "class=\"page-item\"")>
+                                        <a class="page-link" asp-route-page="@i" asp-route-currentFilter="@ViewData["CurrentSearch"]">@i</a>
+                                    </li>
+                                }
+                                <li class="page-item @disableNext"><a class="page-link" asp-route-page="@(Model.PaginatedProducts.PageIndex + 1)">Next</a></li>
+                            </ul>
+                        </nav>
+                    </div>
+                </section>
+                <!-- End Best Seller -->
+            </div>
+        </div>
+    </div>
+</section>
+<!-- ================ category section end ================= -->
+<!-- ================ top product area start ================= -->
+<section class="related-product-area">
+    <div class="container">
+        <div class="section-intro pb-60px">
+            <p>Popular Item in the market</p>
+            <h2>Top <span class="section-intro__style">Product</span></h2>
+        </div>
+        <div class="row mt-30">
+            <partial name="_TopProducts" />
+        </div>
+    </div>
+</section>
+<!-- ================ top product area end ================= -->
+
+@section Scripts {
+    <script src="/vendors/nouislider/nouislider.min.js"></script>
+    <partial name="_Location" />
+    <script> 
+        let urlParams = new URLSearchParams(location.search);
+        let params = {
+            category: 0,
+            brand: 0,
+            color: 0,
+            min: 0,
+            max: 100,
+            limit: 9,
+            page: 1,
+            sort: 'name',
+            search: '',
+        };
+
+        // khởi tạo tất cả param cho urlParams
+        for (let key in params) {
+            if (!urlParams.has(key)) {
+                urlParams.append(key, params[key]);
+            }
+        }
+
+        $(document).ready(() => {
+            // Thiết lập trạng thái cho các checkbox browse và filter
+            let checkboxes = ['category', 'brand', 'color'];
+            for (let key of checkboxes) {
+                let control = $(`#${key}${urlParams.get(key)}`);
+                if (control) {
+                    $(control).prop('checked', true);
+                }
+            }
+
+            // thiết lập trạng thái cho combo box sort và limit
+            $('#sort').val(urlParams.get('sort'));
+            $('#limit').val(urlParams.get('limit'));
+
+            // thiết lập trạng thái và đường dẫn href cho các link của pagination
+            //$('#pagination li').addClass('page-item');
+            //$('#pagination li a').addClass('page-link');
+
+            let savePage = urlParams.get('page');
+            $('#pagination li a').each((index, item) => {
+                let page = $(item).attr('href').split('=')[1];
+                urlParams.set('page', page);
+                let href = '/Product?' + urlParams.toString();
+                $(item).attr('href', href);
+            });
+            urlParams.set('page', savePage);
+        })
+
+        function selectParam(key, value, reset = false) {
+            if (reset) {
+                for (let key in params) {
+                    urlParams.set(key, params[key]);
+                }
+            }
+
+            urlParams.set(key, value);
+            let url = `/Product?${urlParams.toString()}`;
+            location.href = url;
+        }
+    </script>
+}

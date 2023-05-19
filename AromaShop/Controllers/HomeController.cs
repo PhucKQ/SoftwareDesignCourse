@@ -28,34 +28,6 @@ namespace AromaShop.Controllers
             return View(trendingProducts);
         }
 
-        public IActionResult Details(int productId)
-        {
-            // Get product by Id
-            var product = _unitOfWork.Product.Get(u => u.Id == productId, includeProperties: "Category");
-            if (product == null)
-            {
-                return NotFound();
-            }
-
-            var specs = _unitOfWork.ProductSpecification.GetAll(u => u.ProductId == productId);
-            foreach (var spec in specs)
-            {
-                spec.Specification = _unitOfWork.Specification.Get(u => u.Id == spec.SpecificationId);
-            }
-
-            // Get Top Products
-            List<Product> topProducts = _unitOfWork.Product.GetAll(includeProperties: "Category")
-                .OrderByDescending(t => t.OverallReview).Take(12).ToList();
-
-            ProductDetailsViewModel productDetailsVM = new() {
-                Product = product,
-                ProductSpecification = specs,
-                TopProducts = topProducts
-            };
-            
-            return View(productDetailsVM);
-        }
-
         public IActionResult Contact()
         {
             ViewBag.location = "contact";

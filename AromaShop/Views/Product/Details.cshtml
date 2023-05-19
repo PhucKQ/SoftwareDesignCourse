@@ -10,7 +10,7 @@
                 <h1>Product Details</h1>
                 <nav aria-label="breadcrumb" class="banner-breadcrumb">
                     <ol class="breadcrumb">
-                        <li class="breadcrumb-item"><a class="text-decoration-none" asp-action="Index">Home</a></li>
+                        <li class="breadcrumb-item"><a class="text-decoration-none" asp-controller="Home" asp-action="Index">Home</a></li>
                         <li class="breadcrumb-item active" aria-current="page">Product Details</li>
                     </ol>
                 </nav>
@@ -50,7 +50,7 @@
                             <i class="ti-angle-left"></i>
                         </button>
                         <input type="text" name="qty" id="sst" size="2" maxlength="12" value="1" title="Quantity:" class="input-text qty">
-                        <button onclick="var result = document.getElementById('sst'); var sst = result.value; if (!isNaN(sst) & amp;& amp; sst > 0 ) result.value--;return false;"
+                        <button onclick="var result = document.getElementById('sst'); var sst = result.value; if (!isNaN(sst) && sst > 0 ) result.value--;return false;"
                                 class="reduced items-count" type="button">
                             <i class="ti-angle-right"></i>
                         </button>
@@ -71,19 +71,19 @@
 <section class="product_description_area">
     <div class="container">
         <ul class="nav nav-tabs" id="myTab" role="tablist">
-            <li class="nav-item">
-                <a class="nav-link" id="home-tab" data-bs-toggle="tab" href="#home" role="tab" aria-controls="home" aria-selected="true">Description</a>
+            <li class="nav-item" role="none">
+                <a class="nav-link" id="home-tab" data-toggle="tab" href="#home" role="tab" aria-controls="home" aria-selected="true">Description</a>
             </li>
-            <li class="nav-item">
-                <a class="nav-link" id="profile-tab" data-bs-toggle="tab" href="#profile" role="tab" aria-controls="profile"
+            <li class="nav-item" role="none">
+                <a class="nav-link" id="profile-tab" data-toggle="tab" href="#profile" role="tab" aria-controls="profile"
                    aria-selected="false">Specification</a>
             </li>
-            <li class="nav-item">
-                <a class="nav-link" id="contact-tab" data-bs-toggle="tab" href="#contact" role="tab" aria-controls="contact"
+            <li class="nav-item" role="none">
+                <a class="nav-link" id="contact-tab" data-toggle="tab" href="#contact" role="tab" aria-controls="contact"
                    aria-selected="false">Comments</a>
             </li>
-            <li class="nav-item">
-                <a class="nav-link active" id="review-tab" data-bs-toggle="tab" href="#review" role="tab" aria-controls="review"
+            <li class="nav-item" role="none">
+                <a class="nav-link active" id="review-tab" data-toggle="tab" href="#review" role="tab" aria-controls="review"
                    aria-selected="false">Reviews</a>
             </li>
         </ul>
@@ -351,27 +351,8 @@
             <p>Popular Item in the market</p>
             <h2>Top <span class="section-intro__style">Product</span></h2>
         </div>
-        @{ int k = 0; }
         <div class="row mt-30">
-            @for (int i = 0; i < 4; i++)
-            {
-            <div class="col-sm-6 col-xl-3 mb-4 mb-xl-0">
-
-                <div class="single-search-product-wrapper">
-                    @for (int j = 0; j < 3; j++)
-                    {
-                    <div class="single-search-product d-flex">
-                        <a asp-action="Details" asp-route-productId="@Model.TopProducts[k].Id"><img src="@Model.TopProducts[k].ImagePath" alt=""></a>
-                        <div class="desc">
-                            <a asp-action="Details" asp-route-productId="@Model.TopProducts[k].Id" class="title text-decoration-none">@Model.TopProducts[k].Name</a>
-                            <div class="price">@Model.TopProducts[k].Price.ToString("c")</div>
-                        </div>
-                    </div>
-                        k++;
-                    }
-                </div>
-            </div>
-            }
+            <partial name="_TopProducts" />
         </div>
     </div>
 </section>
