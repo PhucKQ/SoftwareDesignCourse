@@ -3,6 +3,7 @@ using AromaShop.Models.ViewModels;
 using AromaShop.Services.IRepository;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Mvc.Rendering;
+using Microsoft.IdentityModel.Tokens;
 using static System.Runtime.InteropServices.JavaScript.JSType;
 
 namespace AromaShop.Areas.Admin.Controllers
@@ -34,29 +35,8 @@ namespace AromaShop.Areas.Admin.Controllers
         {
             if (ModelState.IsValid)
             {
-                // handle image upload
-                if (file != null)
-                {
-                    string wwwRootPath = _webHostEnvironment.WebRootPath;
-                    string fileName = Guid.NewGuid().ToString() + Path.GetExtension(file.FileName);
-                    string categoryPath = Path.Combine(wwwRootPath, @"img\category");
-
-                    // if exist old image
-                    if (!string.IsNullOrEmpty(model.ImagePath))
-                    {
-                        var oldImagePath = Path.Combine(wwwRootPath, model.ImagePath.TrimStart('\\'));
-                        if (System.IO.File.Exists(oldImagePath))
-                        {
-                            System.IO.File.Delete(oldImagePath);
-                        }
-                    }
-
-                    using (var fileStream = new FileStream(Path.Combine(categoryPath, fileName), FileMode.Create))
-                    {
-                        file.CopyTo(fileStream);
-                    }
-                    model.ImagePath = @"\img\category\" + fileName;
-                }
+                string wwwRootPath = _webHostEnvironment.WebRootPath;
+                model.ImagePath = Ultility.Util.UploadImage(model.ImagePath, file, wwwRootPath, "category");
 
                 _unitOfWork.Category.Add(model);
                 _unitOfWork.Save();
@@ -78,29 +58,8 @@ namespace AromaShop.Areas.Admin.Controllers
         {
             if (ModelState.IsValid)
             {
-                // handle image upload
-                if (file != null)
-                {
-                    string wwwRootPath = _webHostEnvironment.WebRootPath;
-                    string fileName = Guid.NewGuid().ToString() + Path.GetExtension(file.FileName);
-                    string categoryPath = Path.Combine(wwwRootPath, @"img\category");
-
-                    // if exist old image
-                    if (!string.IsNullOrEmpty(model.ImagePath))
-                    {
-                        var oldImagePath = Path.Combine(wwwRootPath, model.ImagePath.TrimStart('\\'));
-                        if (System.IO.File.Exists(oldImagePath))
-                        {
-                            System.IO.File.Delete(oldImagePath);
-                        }
-                    }
-
-                    using (var fileStream = new FileStream(Path.Combine(categoryPath, fileName), FileMode.Create))
-                    {
-                        file.CopyTo(fileStream);
-                    }
-                    model.ImagePath = @"\img\category\" + fileName;
-                }
+                string wwwRootPath = _webHostEnvironment.WebRootPath;
+                model.ImagePath = Ultility.Util.UploadImage(model.ImagePath, file, wwwRootPath, "category");
 
                 _unitOfWork.Category.Update(model);
                 _unitOfWork.Save();
@@ -130,15 +89,7 @@ namespace AromaShop.Areas.Admin.Controllers
                 return Json(new {success = false, message = "Error while deleting"});
             }
 
-            // delete the image of category
-            if (objFromDb.ImagePath != null)
-            {
-                var oldImagePath = Path.Combine(_webHostEnvironment.WebRootPath, objFromDb.ImagePath.TrimStart('\\'));
-                if (System.IO.File.Exists(oldImagePath))
-                {
-                    System.IO.File.Delete(oldImagePath);
-                }
-            }
+            Ultility.Util.DeleteImage(objFromDb.ImagePath, _webHostEnvironment.WebRootPath);
 
             _unitOfWork.Category.Remove(objFromDb);
             _unitOfWork.Save();

@@ -2,7 +2,7 @@
     <div class="card-header bg-dark bg-gradient ml-0 py-3">
         <div class="row">
             <div class="col-12 text-center">
-                <h2 class="text-white py-2">Brand List</h2>
+                <h2 class="text-white py-2">Color List</h2>
             </div>
         </div>
     </div>
@@ -12,8 +12,8 @@
             <div class="col-6">
             </div>
             <div class="col-6 text-end">
-                <a asp-area="Admin" asp-controller="Brand" asp-action="Upsert" class="btn btn-primary">
-                    <i class="bi bi-plus-circle"></i>  Create New Brand
+                <a asp-area="Admin" asp-controller="Color" asp-action="Upsert" class="btn btn-primary">
+                    <i class="bi bi-plus-circle"></i>  Create New Color
                 </a>
             </div>
         </div>
@@ -22,7 +22,7 @@
             <thead>
                 <tr>
                     <th>Name</th>
-                    <th>Summary</th>
+                    <th>Code</th>
                     <th>Image</th>
                     <th></th>
                 </tr>
@@ -32,5 +32,5 @@
 </div>
 
 @section Scripts{
-    <script src="~/js/brand.js"></script>
+    <script src="~/js/color.js"></script>
 }

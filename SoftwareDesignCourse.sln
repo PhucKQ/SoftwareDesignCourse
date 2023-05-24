@@ -9,7 +9,9 @@ Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "AromaShop.DataAccess", "Aro
 EndProject
 Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "AromaShop.Models", "Aroma.Models\AromaShop.Models.csproj", "{E8DADCAA-EBDD-4700-B969-72AB28AD7096}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "AromaShop.Services", "AromaShop.Services\AromaShop.Services.csproj", "{D6FB80A6-9972-4E57-9432-8E56B2826652}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "AromaShop.Services", "AromaShop.Services\AromaShop.Services.csproj", "{D6FB80A6-9972-4E57-9432-8E56B2826652}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "AromaShop.Ultility", "Ultility\AromaShop.Ultility.csproj", "{605FFE30-1652-4451-AD92-1E184A4B5D78}"
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
@@ -33,6 +35,10 @@ Global
 		{D6FB80A6-9972-4E57-9432-8E56B2826652}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{D6FB80A6-9972-4E57-9432-8E56B2826652}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{D6FB80A6-9972-4E57-9432-8E56B2826652}.Release|Any CPU.Build.0 = Release|Any CPU
+		{605FFE30-1652-4451-AD92-1E184A4B5D78}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{605FFE30-1652-4451-AD92-1E184A4B5D78}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{605FFE30-1652-4451-AD92-1E184A4B5D78}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{605FFE30-1652-4451-AD92-1E184A4B5D78}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE

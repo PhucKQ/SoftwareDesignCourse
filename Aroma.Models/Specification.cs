@@ -10,6 +10,5 @@ namespace AromaShop.Models
         public string? Name { get; set; }
         public string? Summary { get; set; }
         public List<ProductSpecification>? ProductSpecification { get; set; }
-
     }
 }

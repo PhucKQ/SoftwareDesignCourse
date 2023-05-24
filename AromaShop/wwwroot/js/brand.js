@@ -18,7 +18,7 @@ function loadTable() {
                 data: 'id',
                 'render': function (data) {
                     return `<div class="w-75 btn btn-group" role="group">
-                                <a href="/admin/brand/edit?id=${data}" class="btn btn-primary mx-2 w-50"> <i class="bi bi-pencil-square"></i><br/>Edit</a>
+                                <a href="/admin/brand/upsert?id=${data}" class="btn btn-primary mx-2 w-50"> <i class="bi bi-pencil-square"></i><br/>Edit</a>
                                 <a onClick=Delete('/admin/brand/delete/${data}') class="btn btn-danger mx-2 w-50"> <i class="bi bi-trash-fill"></i><br/>Delete</a>
                             </div>`;
                 }, 'width': '40%'
