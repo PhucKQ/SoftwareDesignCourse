@@ -38,7 +38,9 @@ namespace AromaShop.Models
         public Brand? Brand { get; set; }
 
         public List<ProductColor>? ProductColor { get; set; }
-
         public List<ProductSpecification>? ProductSpecification { get; set; }
+
+        public List<Review>? Reviews { get; set; }
+        public List<Comment>? Comments { get; set; }
     }
 }
