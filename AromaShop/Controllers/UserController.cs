@@ -39,6 +39,7 @@ namespace AromaShop.Controllers
             if (ModelState.IsValid)
             {
                 // check duplicate username
+                
 
                 // check duplicate email
 

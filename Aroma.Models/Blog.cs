@@ -10,6 +10,7 @@ namespace AromaShop.Models
 {
     public class Blog
     {
+        [Key]
         public int Id { get; set; }
         [Required]
         public string Title { get; set; }
@@ -22,7 +23,8 @@ namespace AromaShop.Models
 
         public List<Comment>? Comments { get; set; }
 
-        public int UserId { get; set; }
+        public string UserId { get; set; }
+        [ForeignKey("UserId")]
         public User? User { get; set; }
 
     }

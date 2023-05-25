@@ -10,6 +10,11 @@ namespace AromaShop.Models
 {
     public class User : IdentityUser
     {
+        public User() 
+        {
+            Id = new Guid().ToString();
+        }
+
         public string? Fullname { get; set; }
         public string? AvatarPath { get; set; }
         public bool IsAdmin { get; set; }
