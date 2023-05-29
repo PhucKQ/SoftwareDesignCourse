@@ -1,6 +1,6 @@
 ﻿using Microsoft.AspNetCore.Http;
 
-namespace Ultility
+namespace AromaShop.Ultility
 {
     public static class Util
     {

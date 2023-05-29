@@ -1,0 +1,98 @@
+﻿@page
+@model RegisterModel
+@{
+    ViewData["Title"] = "Register";
+}
+
+<!-- ================ start banner area ================= -->
+<section class="blog-banner-area" id="category">
+    <div class="container h-100">
+        <div class="blog-banner">
+            <div class="text-center">
+                <h1>Register</h1>
+                <nav aria-label="breadcrumb" class="banner-breadcrumb">
+                    <ol class="breadcrumb">
+                        <li class="breadcrumb-item"><a asp-area="Default" asp-controller="Home" asp-action="Index">Home</a></li>
+                        <li class="breadcrumb-item active" aria-current="page">Register</li>
+                    </ol>
+                </nav>
+            </div>
+        </div>
+    </div>
+</section>
+<!-- ================ end banner area ================= -->
+<section class="login_box_area section-margin">
+    <div class="container">
+        <div class="row">
+            @*<div class="col-md-4">
+                    <form id="registerForm" asp-route-returnUrl="@Model.ReturnUrl" method="post">
+                        <h2>Create a new account.</h2>
+                        <hr />
+                        <div asp-validation-summary="ModelOnly" class="text-danger" role="alert"></div>
+                        <div class="form-floating mb-3">
+                            <input asp-for="Input.Email" class="form-control" autocomplete="username" aria-required="true" placeholder="name@example.com" />
+                            <label asp-for="Input.Email">Email</label>
+                            <span asp-validation-for="Input.Email" class="text-danger"></span>
+                        </div>
+                        <div class="form-floating mb-3">
+                            <input asp-for="Input.Password" class="form-control" autocomplete="new-password" aria-required="true" placeholder="password" />
+                            <label asp-for="Input.Password">Password</label>
+                            <span asp-validation-for="Input.Password" class="text-danger"></span>
+                        </div>
+                        <div class="form-floating mb-3">
+                            <input asp-for="Input.ConfirmPassword" class="form-control" autocomplete="new-password" aria-required="true" placeholder="password" />
+                            <label asp-for="Input.ConfirmPassword">Confirm Password</label>
+                            <span asp-validation-for="Input.ConfirmPassword" class="text-danger"></span>
+                        </div>
+                        <button id="registerSubmit" type="submit" class="w-100 btn btn-lg btn-primary">Register</button>
+                    </form>
+                </div>*@
+
+            <div class="col-lg-6">
+                <div class="login_box_img">
+                    <div class="hover">
+                        <h4>Already have an account?</h4>
+                        <p>There are advances being made in science and technology everyday, and a good example of this is the</p>
+                        <a class="button button-account" asp-page="./Login">Login Now</a>
+                    </div>
+                </div>
+            </div>
+            <div class="col-lg-6">
+                <div class="login_form_inner register_form_inner">
+                    <h3>Create an account</h3>
+                    <form id="register_form" asp-route-returnUrl="@Model.ReturnUrl" method="post" class="row login_form">
+                        <div class="col-md-12 form-group">
+                            <input class="form-control" asp-for="Input.UserName" placeholder="Email Address" onfocus="this.placeholder = ''" onblur="this.placeholder = 'Email Address'">
+                            <span asp-validation-for="Input.UserName" class="text-danger"></span>
+                        </div>
+                        
+                        <div class="col-md-12 form-group">
+                            <input class="form-control" asp-for="Input.Email" placeholder="Email Address" onfocus="this.placeholder = ''" onblur="this.placeholder = 'Email Address'">
+                            <span asp-validation-for="Input.Email" class="text-danger"></span>
+                        </div>
+                        <div class="col-md-12 form-group">
+                            <input class="form-control" asp-for="Input.Password" placeholder="Password" onfocus="this.placeholder = ''" onblur="this.placeholder = 'Password'">
+                            <span asp-validation-for="Input.Password" class="text-danger"></span>
+                        </div>
+                        <div class="col-md-12 form-group">
+                            <input asp-for="Input.ConfirmPassword" class="form-control" placeholder="Confirm Password" onfocus="this.placeholder = ''" onblur="this.placeholder = 'Confirm Password'">
+                            <span asp-validation-for="Input.ConfirmPassword" class="text-danger"></span>
+                        </div>
+                        <div class="col-md-12 form-group">
+                            <div class="creat_account">
+                                <input type="checkbox" id="f-option2" name="selector">
+                                <label for="f-option2">Keep me logged in</label>
+                            </div>
+                        </div>
+                        <div class="col-md-12 form-group">
+                            <button type="submit" value="submit" class="button button-register w-100">Register</button>
+                        </div>
+                    </form>
+                </div>
+            </div>
+        </div>
+    </div>
+</section>
+@section Scripts {
+    <partial name="_ValidationScriptsPartial" />
+}

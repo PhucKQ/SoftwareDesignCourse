@@ -4,3 +4,11 @@
 @{
 }
 
+<div class="container">
+    <h2> Welcome back, @User.Identity.Name</h2>
+    @{
+        string role = "Employee";
+        if (User.IsInRole("Admin")) role = "Employee";
+    }
+    <p>Your role is: @role</p>
+</div>

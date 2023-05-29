@@ -1,8 +1,11 @@
 using AromaShop.Data;
 using AromaShop.Services;
 using AromaShop.Services.IRepository;
+using AromaShop.Ultility;
 using Microsoft.AspNetCore.Identity;
+using Microsoft.AspNetCore.Identity.UI.Services;
 using Microsoft.EntityFrameworkCore;
+using Microsoft.Extensions.Options;
 using System.Text.Json.Serialization;
 
 var builder = WebApplication.CreateBuilder(args);
@@ -13,10 +16,19 @@ builder.Services.AddDbContext<ApplicationDbContext>(options => {
     options.UseSqlServer(connectionString);
     options.EnableSensitiveDataLogging();
 });
+
 builder.Services.AddDatabaseDeveloperPageExceptionFilter();
 
-builder.Services.AddDefaultIdentity<IdentityUser>(options => options.SignIn.RequireConfirmedAccount = true)
+builder.Services.AddIdentity<IdentityUser, IdentityRole>(options => options.SignIn.RequireConfirmedAccount = false)
     .AddEntityFrameworkStores<ApplicationDbContext>();
+
+builder.Services.ConfigureApplicationCookie(options =>
+{
+    options.LoginPath = $"/Identity/Account/Login";
+    options.LogoutPath = $"/Identity/Account/Logout";
+    options.AccessDeniedPath = $"/Identity/Account/AccessDenied";
+});
+
 builder.Services.AddControllersWithViews();
 
 builder.Services.AddControllers().AddJsonOptions(options =>
@@ -26,6 +38,9 @@ builder.Services.AddControllers().AddJsonOptions(options =>
 });
 
 builder.Services.AddScoped<IUnitOfWork, UnitOfWork>();
+builder.Services.AddScoped<IEmailSender, EmailSender>();
+
+builder.Services.AddRazorPages();
 
 var app = builder.Build();
 
@@ -45,7 +60,7 @@ app.UseHttpsRedirection();
 app.UseStaticFiles();
 
 app.UseRouting();
-
+app.UseAuthentication();
 app.UseAuthorization();
 
 app.MapControllerRoute(

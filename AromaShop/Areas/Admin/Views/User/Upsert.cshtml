@@ -1,0 +1,77 @@
+﻿@model UserCreateOrUpdateVM
+
+<div class="card shadow border-0 my-4">
+    <div class="card-header bg-dark bg-gradient ml-0 py-3">
+        <div class="row">
+            <div class="col-12 text-center">
+                <h2 class="text-white py-2">@(string.IsNullOrEmpty(Model.User.Id) ? "Create" : "Update") User</h2>
+            </div>
+        </div>
+    </div>
+
+    <div class="card-body p-4">
+        <form asp-action="Upsert" method="post" class="row" enctype="multipart/form-data">
+            <input asp-for="User.Id" hidden />
+            <input asp-for="User.AvatarPath" hidden />
+            <div class="col-10">
+                <div class="p-3 border">
+                    <div class="row">
+                        <div class="form-floating py-2 col-12">
+                            <input asp-for="User.Fullname" class="form-control border-0 shadow" />
+                            <label asp-for="User.Fullname" class="ms-2"></label>
+                            <span asp-validation-for="User.Fullname" class="text-danger"></span>
+                        </div>
+
+                        <div class="form-floating py-2 col-12">
+                            <input asp-for="User.UserName" class="form-control border-0 shadow" readonly />
+                            <label asp-for="User.UserName" class="ms-2"></label>
+                        </div>
+
+                        <div class="form-floating py-2 col-12">
+                            <input asp-for="User.Email" class="form-control border-0 shadow" />
+                            <label asp-for="User.Email" class="ms-2"></label>
+                            <span asp-validation-for="User.Email" class="text-danger"></span>
+                        </div>
+
+                        <div class="form-floating py-2 col-12">
+                            <input type="file" name="file" class="form-control border-0 shadow" />
+                            <label asp-for="User.AvatarPath" class="ms-2"></label>
+                        </div>
+
+                        <div class="form-floating py-2 col-12">
+                            <select asp-for="User.Role" class="form-select" asp-items="Model.Roles">
+                                <option selected disabled>--Select a role--</option>
+                            </select>
+                            <label asp-for="User.Role" class="ms-2"></label>
+                        </div>
+                    </div>
+                    <div class="row pt-2">
+                        <div class="col-6 col-md-3">
+                            @if (string.IsNullOrEmpty(Model.User.Id))
+                            {
+                                <button type="submit" class="btn btn-primary form-control align-item-start">Create</button>
+                            }
+                            else
+                            {
+                                <button type="submit" class="btn btn-primary form-control align-item-start">Update</button>
+                            }
+                        </div>
+                        <div class="col-6 col-md-3">
+                            <a asp-controller="User" asp-action="Index" class="btn btn-outline-primary form-control">Back to list</a>
+                        </div>
+                    </div>
+                </div>
+            </div>
+            @if (!string.IsNullOrEmpty(Model.User.Id))
+            {
+                <div class="col-2">
+                    <img src="@Model.User.AvatarPath" alt="" style="width: 200px; height: 200px;" />
+                </div>
+            }
+        </form>
+    </div>
+</div>
+
+@section Scripts {
+    <partial name="_ValidationScriptsPartial" />
+}

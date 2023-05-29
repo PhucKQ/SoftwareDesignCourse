@@ -15,6 +15,7 @@ namespace AromaShop.Services.IRepository
         ISpecificationRepository Specification { get; }
         IProductSpecificationRepository ProductSpecification { get; }
         IProductColorRepository ProductColor { get; }
+        IUserRepository User { get; }
         void Save();
     }
 }
