@@ -1,9 +1,9 @@
 ﻿using AromaShop.Models;
 using AromaShop.Models.ViewModels;
 using AromaShop.Services.IRepository;
+using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
-using Microsoft.Data.SqlClient;
-using System.Drawing;
+using System.Security.Claims;
 
 namespace AromaShop.Controllers
 {
@@ -142,6 +142,68 @@ namespace AromaShop.Controllers
             return View(productsVM);
         }
 
+        
+        public IActionResult Details(int productId)
+        {
+            // Get product by Id
+            var product = _unitOfWork.Product.Get(u => u.Id == productId, includeProperties: "Category");
+            if (product == null)
+            {
+                return NotFound();
+            }
+
+            var specs = _unitOfWork.ProductSpecification.GetAll(u => u.ProductId == productId);
+            foreach (var spec in specs)
+            {
+                spec.Specification = _unitOfWork.Specification.Get(u => u.Id == spec.SpecificationId);
+            }
+
+            ProductDetailsViewModel productDetailsVM = new()
+            {
+                ProductId = productId,
+                Product = product,
+                ProductSpecification = specs,
+                TopProducts = GetTopProducts(),
+            };
+
+            return View(productDetailsVM);
+        }
+
+        [HttpPost]
+        [ValidateAntiForgeryToken]
+        [Authorize]
+        public IActionResult Details(ProductDetailsViewModel model, int productId)
+        {
+            var claims = (ClaimsIdentity)User.Identity;
+            var userId = claims.FindFirst(ClaimTypes.NameIdentifier).Value;
+            //model.UserId = userId;
+
+            ShoppingCart cartFromDb = _unitOfWork.ShoppingCart.Get(u => u.UserId == userId && u.ProductId == productId);
+
+            if (cartFromDb != null)
+            {
+                // shopping cart exist
+                cartFromDb.Count += model.Count;
+                _unitOfWork.ShoppingCart.Update(cartFromDb);
+            }
+            else
+            {
+                // add new record to table
+                ShoppingCart shoppingCart = new()
+                {
+                    ProductId = productId,
+                    Count = model.Count,
+                    UserId = userId,
+                };
+                _unitOfWork.ShoppingCart.Add(shoppingCart);
+            }
+            _unitOfWork.Save();
+
+            return RedirectToAction(nameof(Index));
+        }
+                
+
+        #region Private Method
         private IEnumerable<Category> GetCategoryList(IEnumerable<Product> sortedList)
         {
             // get Categories for sidebar
@@ -181,7 +243,7 @@ namespace AromaShop.Controllers
                 {
                     if (color.Id == item.ColorId)
                     {
-                        color.Count = count; 
+                        color.Count = count;
                         break;
                     }
                 }
@@ -199,31 +261,6 @@ namespace AromaShop.Controllers
             return topProducts;
         }
 
-        public IActionResult Details(int productId)
-        {
-            // Get product by Id
-            var product = _unitOfWork.Product.Get(u => u.Id == productId, includeProperties: "Category");
-            if (product == null)
-            {
-                return NotFound();
-            }
-
-            var specs = _unitOfWork.ProductSpecification.GetAll(u => u.ProductId == productId);
-            foreach (var spec in specs)
-            {
-                spec.Specification = _unitOfWork.Specification.Get(u => u.Id == spec.SpecificationId);
-            }
-
-            ProductDetailsViewModel productDetailsVM = new()
-            {
-                Product = product,
-                ProductSpecification = specs,
-                TopProducts = GetTopProducts(),
-            };
-
-            return View(productDetailsVM);
-        }
+        #endregion
     }
-
-    
 }

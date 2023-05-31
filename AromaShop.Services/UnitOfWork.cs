@@ -1,4 +1,5 @@
 ﻿using AromaShop.Data;
+using AromaShop.Models;
 using AromaShop.Services.IRepository;
 using System;
 using System.Collections.Generic;
@@ -21,6 +22,8 @@ namespace AromaShop.Services
         public IProductColorRepository ProductColor { get; private set; }
         public IUserRepository User { get; private set; }
 
+        public IShoppingCartRepository ShoppingCart { get; private set; }
+
         public UnitOfWork(ApplicationDbContext db)
         {
             _db = db;
@@ -32,6 +35,7 @@ namespace AromaShop.Services
             Category = new CategoryRepository(_db);
             ProductColor = new ProductColorRepository(_db);
             User = new UserRepository(_db);
+            ShoppingCart = new ShoppingCartRepository(_db);
         }
 
 

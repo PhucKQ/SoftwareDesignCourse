@@ -9,13 +9,18 @@ using System.Threading.Tasks;
 
 namespace AromaShop.Services
 {
-    public class UserRepository : Repository<User>, IUserRepository
+    public class ShoppingCartRepository : Repository<ShoppingCart>, IShoppingCartRepository
     {
         private readonly ApplicationDbContext _db;
 
-        public UserRepository(ApplicationDbContext db) : base(db)
+        public ShoppingCartRepository(ApplicationDbContext db) : base(db)
         {
             _db = db;
+        }
+
+        public void Update(ShoppingCart obj)
+        {
+            _db.ShoppingCarts.Update(obj);
         }
     }
 }

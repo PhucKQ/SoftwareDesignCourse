@@ -43,17 +43,22 @@
                         @Model.Product.Summary
                     </p>
                     <div class="product_count">
-                        <label for="qty">Quantity:</label>
-                        <button onclick="var result = document.getElementById('sst'); var sst = result.value; if( !isNaN( sst )) result.value++;return false;"
-                                class="increase items-count" type="button">
-                            <i class="ti-angle-left"></i>
-                        </button>
-                        <input type="text" name="qty" id="sst" size="2" maxlength="12" value="1" title="Quantity:" class="input-text qty">
-                        <button onclick="var result = document.getElementById('sst'); var sst = result.value; if (!isNaN(sst) && sst > 0 ) result.value--;return false;"
-                                class="reduced items-count" type="button">
-                            <i class="ti-angle-right"></i>
-                        </button>
-                        <a class="button primary-btn" href="#">Add to Cart</a>
+                        <form id="quantityForm" asp-area="Default" asp-controller="Product" asp-action="Details" method="post">
+                            <input asp-for="ProductId" hidden />
+                            <label for="qty">Quantity:</label>
+                            <!--<button onclick="var result = document.getElementById('sst'); var sst = result.value; if( !isNaN( sst )) result.value++;return false;"
+            class="increase items-count" type="button">
+        <i class="ti-angle-left"></i>
+    </button>
+    <input asp-for="Model.Count" type="text" name="qty" id="sst" size="2" maxlength="12" value="1" title="Quantity:" class="input-text qty">-->
+                            <input type="number" name="Model.Count" id="sst" size="2" maxlength="12" value="1" title="Quantity:" class="input-text qty">
+                            <span asp-validation-for="Count"></span>
+                            <!--<button onclick="var result = document.getElementById('sst'); var sst = result.value; if (!isNaN(sst) && sst > 0 ) result.value--;return false;"
+            class="reduced items-count" type="button">
+        <i class="ti-angle-right"></i>
+    </button>-->
+                            <a href="#" class="button primary-btn" onclick="document.forms['quantityForm'].submit(); return false;">Add to Cart</a>
+                        </form>
                     </div>
                     <div class="card_area d-flex align-items-center">
                         <a class="icon_btn text-decoration-none" href="#"><i class="lnr lnr lnr-diamond"></i></a>

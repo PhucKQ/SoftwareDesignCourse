@@ -25,7 +25,7 @@ namespace AromaShop.Data
         public DbSet<Comment> Comments { get; set; }
         public DbSet<Blog> Blogs { get; set; }
 
-
+        public DbSet<ShoppingCart> ShoppingCarts { get; set; }
         protected override void OnModelCreating(ModelBuilder modelBuilder)
         {
             base.OnModelCreating(modelBuilder);

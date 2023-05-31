@@ -7,7 +7,8 @@ using System.Threading.Tasks;
 
 namespace AromaShop.Services.IRepository
 {
-    public interface IUserRepository : IRepository<User>
+    public interface IShoppingCartRepository : IRepository<ShoppingCart>
     {
+        void Update(ShoppingCart obj);
     }
 }
