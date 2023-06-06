@@ -62,7 +62,7 @@
         </div>
         <div class="billing_details">
             <div class="">
-                <form id="billInfoForm" class="row contact_form" asp-controller="Cart" asp-action="PlaceOrder" method="post">
+                <form id="infoForm" class="row contact_form" asp-action="PlaceOrderWithStripe" method="post">
                     <div class="col-lg-8">
                         <h3>Billing Details</h3>
                         <input asp-for="OrderHeader.UserId" hidden />
@@ -144,7 +144,7 @@
                             <div class="payment_item">
                                 <div class="radion_btn">
                                     <input type="radio" id="f-option5" name="selector" onclick="showSubmitButton()">
-                                    <label for="f-option5">Check payments</label>
+                                    <label for="f-option5">Proceed to Stripe</label>
                                     <div class="check"></div>
                                 </div>
                                 <p>
@@ -155,12 +155,12 @@
                             <div class="payment_item active">
                                 <div class="radion_btn">
                                     <input type="radio" id="f-option6" name="selector" onclick="showSubmitButton()">
-                                    <label for="f-option6">Paypal </label>
-                                    <img src="img/product/card.jpg" alt="">
+                                    <label for="f-option6">Check payment </label>
+                                    <img src="" alt="stripeIcon">
                                     <div class="check"></div>
                                 </div>
                                 <p>
-                                    Pay via PayPal; you can pay with your credit card if you don’t have a PayPal
+                                    Pay via Stripe; you can pay with your credit card if you don’t have a Stripe
                                     account.
                                 </p>
                             </div>
@@ -170,10 +170,10 @@
                                 <a href="#">terms & conditions*</a>
                             </div>-->
                             <div class="text-center">
-                                <a id="paypalBtn" class="button button-paypal" style="display: none;">
-                                    Proceed to Paypal
+                                <a id="stripeBtn" class="button button-paypal text-white" style="display:none; cursor: pointer;">
+                                    Place Order
                                 </a>
-                                <input id="submitBtn" type="submit" class="button button-paypal" value="Place Order" style="display: none;">
+                                <input id="submitBtn" type="submit" class="button button-paypal" value="Proceed to Stripe" style="display: none; cursor: pointer;">
                             </div>
                         </div>
                     </div>
@@ -192,7 +192,7 @@
             var checkPaymentRadio = document.getElementById("f-option5");
             var paypalPaymentRadio = document.getElementById("f-option6");
             var submitButton = document.getElementById("submitBtn");
-            var paypalButton = document.getElementById("paypalBtn");
+            var paypalButton = document.getElementById("stripeBtn");
 
             if (checkPaymentRadio.checked) {
                 paypalButton.style.display = "none";
@@ -202,5 +202,35 @@
                 submitButton.style.display = "none";
             }
         }
+
+        $(document).ready(function () {
+            $("#infoForm").validate();
+
+            $("#stripeBtn").click(function (event) {
+                event.preventDefault(); // Prevent the default link behavior
+
+                var form = $("#infoForm");
+                if (form.valid()) {
+                    var formData = new FormData(form[0]);
+
+                    $.ajax({
+                        url: '/Cart/PlaceOrder',
+                        type: "POST",
+                        data: formData,
+                        processData: false,
+                        contentType: false,
+                        xhrFields: {
+                            withCredentials: true
+                        },
+                        success: function (response) {
+                            // Handle the response from the server
+                            // ...
+                        }
+                    });
+                }
+            });
+        });
+
+
     </script>
 }

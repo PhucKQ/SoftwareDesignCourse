@@ -3,8 +3,8 @@ using AromaShop.Models.ViewModels;
 using AromaShop.Services.IRepository;
 using AromaShop.Ultility;
 using Microsoft.AspNetCore.Authorization;
-using Microsoft.AspNetCore.Identity;
 using Microsoft.AspNetCore.Mvc;
+using Stripe.Checkout;
 using System.Security.Claims;
 
 namespace AromaShop.Controllers
@@ -26,11 +26,11 @@ namespace AromaShop.Controllers
 
             double orderTotal = 0;
             var cartsFromDb = _unitOfWork.ShoppingCart.GetAll(u => u.UserId == userId).ToList();
-            
+
             foreach (var cart in cartsFromDb)
             {
                 cart.Product = _unitOfWork.Product.Get(u => u.Id == cart.ProductId);
-                cart.Total= cart.Count * cart.Product.Price;
+                cart.Total = cart.Count * cart.Product.Price;
                 orderTotal += cart.Total;
             }
 
@@ -89,7 +89,7 @@ namespace AromaShop.Controllers
                 orderTotal += cart.Total;
             }
 
-                ShoppingCartVM shoppingCartVM = new()
+            ShoppingCartVM shoppingCartVM = new()
             {
                 ShoppingCartList = cartsFromDb,
                 OrderHeader = new OrderHeader() { User = _unitOfWork.User.Get(u => u.Id == userId), OrderTotal = orderTotal }
@@ -98,11 +98,6 @@ namespace AromaShop.Controllers
             return View(shoppingCartVM);
         }
 
-        //public IActionResult PlaceOrder()
-        //{
-        //    return View();
-        //}
-
         [HttpPost]
         [ValidateAntiForgeryToken]
         public IActionResult PlaceOrder(ShoppingCartVM model)
@@ -110,7 +105,7 @@ namespace AromaShop.Controllers
             var claims = (ClaimsIdentity)User.Identity;
             var userId = claims.FindFirst(ClaimTypes.NameIdentifier).Value;
             model.ShoppingCartList = _unitOfWork.ShoppingCart.GetAll(u => u.UserId == userId).ToList();
-            
+
             // fill in OrderHeader fields to add a new record
             model.OrderHeader.OrderDate = System.DateTime.Now;
             model.OrderHeader.UserId = userId;
@@ -132,7 +127,7 @@ namespace AromaShop.Controllers
             // create OrderDetail model info to add a new record
             foreach (var cart in model.ShoppingCartList)
             {
-                OrderDetail orderDetail = new OrderDetail()
+                OrderDetail orderDetail = new()
                 {
                     ProductId = cart.ProductId,
                     OrderHeaderId = model.OrderHeader.Id,
@@ -143,25 +138,109 @@ namespace AromaShop.Controllers
                 _unitOfWork.Save();
             }
             return RedirectToAction(nameof(OrderConfirmation), new { id = model.OrderHeader.Id });
-            
-            //return RedirectToAction(nameof(Checkout));
+        }
+
+        [HttpPost]
+        [ValidateAntiForgeryToken]
+        public IActionResult PlaceOrderWithStripe(ShoppingCartVM model)
+        {
+            var claims = (ClaimsIdentity)User.Identity;
+            var userId = claims.FindFirst(ClaimTypes.NameIdentifier).Value;
+            model.ShoppingCartList = _unitOfWork.ShoppingCart.GetAll(u => u.UserId == userId).ToList();
+
+            // fill in OrderHeader fields to add a new record
+            model.OrderHeader.OrderDate = System.DateTime.Now;
+            model.OrderHeader.UserId = userId;
+
+            foreach (var cart in model.ShoppingCartList)
+            {
+                cart.Product = _unitOfWork.Product.Get(u => u.Id == cart.ProductId);
+                model.OrderHeader.OrderTotal += cart.Product.Price * cart.Count;
+            }
+
+            model.OrderHeader.PaymentStatus = Util.PaymentStatusPending;
+            model.OrderHeader.OrderStatus = Util.StatusPending;
+
+            _unitOfWork.OrderHeader.Add(model.OrderHeader);
+            _unitOfWork.Save();
+
+            // create OrderDetail model info to add a new record
+            foreach (var cart in model.ShoppingCartList)
+            {
+                OrderDetail orderDetail = new()
+                {
+                    ProductId = cart.ProductId,
+                    OrderHeaderId = model.OrderHeader.Id,
+                    Price = cart.Product.Price,
+                    Quantity = cart.Count
+                };
+                _unitOfWork.OrderDetail.Add(orderDetail);
+                _unitOfWork.Save();
+            }
+
+            //stripe
+            string domain = "https://localhost:7154";
+            var options = new SessionCreateOptions
+            {
+                SuccessUrl = domain + $"/Cart/OrderConfirmation?id={model.OrderHeader.Id}",
+                CancelUrl = domain + "/Cart/Index",
+                LineItems = new List<SessionLineItemOptions>(),
+                Mode = "payment",
+            };
+
+            foreach (var item in model.ShoppingCartList)
+            {
+                var sessionLineItem = new SessionLineItemOptions
+                {
+                    PriceData = new SessionLineItemPriceDataOptions
+                    {
+                        UnitAmount = (long)(item.Product.Price * 100),
+                        Currency = "usd",
+                        ProductData = new SessionLineItemPriceDataProductDataOptions
+                        {
+                            Name = item.Product.Name,
+                        }
+                    },
+                    Quantity = item.Count
+                };
+                options.LineItems.Add(sessionLineItem);
+            }
+
+            var service = new SessionService();
+            Session session = service.Create(options);
+            _unitOfWork.OrderHeader.UpdateStripePaymentId(model.OrderHeader.Id, session.Id, session.PaymentIntentId);
+            _unitOfWork.Save();
+            Response.Headers.Add("Location", session.Url);
+            return new StatusCodeResult(303);
         }
 
         public IActionResult OrderConfirmation(int id)
         {
-            var userId = _unitOfWork.OrderHeader.Get(u=>u.Id == id).UserId;
+            var orderHeader = _unitOfWork.OrderHeader.Get(u => u.Id == id);
             var orderDetails = _unitOfWork.OrderDetail.GetAll(u => u.OrderHeaderId == id);
             foreach (var item in orderDetails)
             {
-                item.Product = _unitOfWork.Product.Get(u => u.Id == item.Id);
+                item.Product = _unitOfWork.Product.Get(u => u.Id == item.ProductId);
             }
 
             OrderConfirmationVM orderConfirmationVM = new()
             {
-                OrderHeader = _unitOfWork.OrderHeader.Get(u => u.Id == id),
+                OrderHeader = orderHeader,
                 OrderDetails = orderDetails,
             };
 
+            // check Stripe payment status
+            var service = new SessionService();
+            Session session = service.Get(orderHeader.SessionId);
+
+            if (session.PaymentStatus.ToLower() == "paid")
+            {
+                _unitOfWork.OrderHeader.UpdateStripePaymentId(id, session.Id, session.PaymentIntentId);
+                _unitOfWork.OrderHeader.UpdateStatus(id, Util.StatusApproved, Util.PaymentStatusApproved);
+                _unitOfWork.Save();
+            }
+
+            var userId = _unitOfWork.OrderHeader.Get(u => u.Id == id).UserId;
             IEnumerable<ShoppingCart> shoppingCarts = _unitOfWork.ShoppingCart.GetAll(u => u.UserId == userId);
             _unitOfWork.ShoppingCart.RemoveRange(shoppingCarts);
             _unitOfWork.Save();
