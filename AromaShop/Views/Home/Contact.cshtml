@@ -19,33 +19,15 @@
 <section class="section-margin--small">
     <div class="container">
         <div class="d-none d-sm-block mb-5 pb-4">
-            <div id="map" style="height: 420px;"></div>
-            <script>
-                function initMap() {
-                    var uluru = { lat: -25.363, lng: 131.044 };
-                    var grayStyles = [
-                        {
-                            featureType: "all",
-                            stylers: [
-                                { saturation: -90 },
-                                { lightness: 50 }
-                            ]
-                        },
-                        { elementType: 'labels.text.fill', stylers: [{ color: '#A3A3A3' }] }
-                    ];
-                    var map = new google.maps.Map(document.getElementById('map'), {
-                        center: { lat: -31.197, lng: 150.744 },
-                        zoom: 9,
-                        styles: grayStyles,
-                        scrollwheel: false
-                    });
-                }
-
-            </script>
-            <script src="https://maps.googleapis.com/maps/api/js?key=AIzaSyDpfS1oRGreGSBU5HHjMmQ3o5NLw7VdJ6I&callback=initMap"></script>
-
+            <div id="map" style="width: 100%;">
+                <iframe width="1080" height="420" frameborder="0" scrolling="no" marginheight="0" marginwidth="0" 
+                        src="https://www.openstreetmap.org/export/embed.html?bbox=106.68010801076892%2C10.76147291128591%2C106.68261855840684%2C10.763304256494322&amp;layer=mapnik&amp;marker=10.762388585280922%2C106.68136328458786" 
+                        style="border: 1px solid black">
+                </iframe>
+                <br />
+                <small><a href="https://www.openstreetmap.org/?mlat=10.76239&amp;mlon=106.68136#map=19/10.76239/106.68136">View Larger Map</a></small>
+            </div>
         </div>
-
 
         <div class="row">
             <div class="col-md-4 col-lg-3 mb-4 mb-md-0">
