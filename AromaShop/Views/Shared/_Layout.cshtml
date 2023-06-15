@@ -1,4 +1,7 @@
-﻿<!DOCTYPE html>
+﻿@using Microsoft.AspNetCore.Http
+@inject IHttpContextAccessor HttpContextAccessor
+
+<!DOCTYPE html>
 <html lang="en">
 <head>
     <meta charset="utf-8" />
@@ -34,37 +37,14 @@
                     <div class="collapse navbar-collapse offset" id="navbarSupportedContent">
                         <ul class="nav navbar-nav menu_nav ml-auto mr-auto">
                             <li id="home" class="nav-item"><a class="nav-link" asp-area="Default" asp-controller="Home" asp-action="Index">Home</a></li>
-
                             <li id="shop" class="nav-item"><a class="nav-link" asp-area="Default" asp-controller="Product" asp-action="Index">Shop Category</a></li>
-
-                            <!--<li id="shop" class="nav-item submenu dropdown">
-        <a href="#" class="nav-link dropdown-toggle" data-toggle="dropdown" role="button" aria-haspopup="true"
-           aria-expanded="false">Shop</a>
-        <ul class="dropdown-menu">
-            <li class="nav-item"><a class="nav-link" asp-controller="Product" asp-action="Index">Shop Category</a></li>-->
-                            @*<li class="nav-item"><a class="nav-link" href="single-product.html">Product Details</a></li>
-        <li class="nav-item"><a class="nav-link" href="checkout.html">Product Checkout</a></li>
-        <li class="nav-item"><a class="nav-link" href="confirmation.html">Confirmation</a></li>*@
-                            <!--<li class="nav-item"><a class="nav-link" href="cart.html">Shopping Cart</a></li>
-        </ul>
-    </li>-->
 
                             <li id="blog" class="nav-item submenu dropdown">
                                 <a href="#" class="nav-link dropdown-toggle" data-toggle="dropdown" role="button" aria-haspopup="true"
                                    aria-expanded="false">Blog</a>
                                 <ul class="dropdown-menu">
-                                    <li class="nav-item"><a class="nav-link" href="blog.html">Blog</a></li>
-                                    <li class="nav-item"><a class="nav-link" href="single-blog.html">Blog Details</a></li>
-                                </ul>
-                            </li>
-
-                            <li id="pages" class="nav-item submenu dropdown">
-                                <a href="#" class="nav-link dropdown-toggle" data-toggle="dropdown" role="button" aria-haspopup="true"
-                                   aria-expanded="false">Pages</a>
-                                <ul class="dropdown-menu">
-                                    <li class="nav-item"><a class="nav-link" asp-area="Default" asp-controller="User" asp-action="Login">Login</a></li>
-                                    <li class="nav-item"><a class="nav-link" asp-area="Default" asp-controller="User" asp-action="Register">Register</a></li>
-                                    <li class="nav-item"><a class="nav-link" href="tracking-order.html">Tracking</a></li>
+                                    <li class="nav-item"><a class="nav-link" href="#">Blog</a></li>
+                                    <li class="nav-item"><a class="nav-link" href="#">Blog Details</a></li>
                                 </ul>
                             </li>
 
@@ -73,16 +53,35 @@
 
                         <ul class="nav-shop">
                             <li class="nav-item"><button><i class="ti-search"></i></button></li>
-                            <li class="nav-item">
-                                <a asp-controller="Cart" asp-action="Index">
-                                    <button>
-                                        <i class="ti-shopping-cart"></i><span class="nav-shop__circle">3</span>
-                                    </button>
-                                </a>
-                            </li>
+                            @if (HttpContextAccessor.HttpContext.Session.GetInt32(AromaShop.Ultility.Util.SessionCart) != null)
+                            {
+                                <li class="nav-item">
+                                    <a asp-controller="Cart" asp-action="Index">
+                                        <button>
+                                            <i class="ti-shopping-cart"></i>
+                                            <span class="nav-shop__circle">
+                                                (@HttpContextAccessor.HttpContext.Session.GetInt32(AromaShop.Ultility.Util.SessionCart))
+                                            </span>
+                                        </button>
+                                    </a>
+                                </li>
+                            }
+                            else
+                            {
+                                <li class="nav-item">
+                                    <a asp-controller="Cart" asp-action="Index">
+                                        <button>
+                                            <i class="ti-shopping-cart"></i>
+                                            <span class="nav-shop__circle">
+                                                (0)
+                                            </span>
+                                        </button>
+                                    </a>
+                                </li>
+                            }
                             <li class="nav-item"><a class="button button-header" asp-area="Default" asp-controller="Product" asp-action="Index">Buy Now</a></li>
                         </ul>
-                            <partial name="_LoginPartial" />
+                        <partial name="_LoginPartial" />
                     </div>
                 </div>
             </nav>

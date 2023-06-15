@@ -18,14 +18,13 @@ builder.Services.AddDbContext<ApplicationDbContext>(options => {
     options.EnableSensitiveDataLogging();
 });
 
-//builder.Services.AddCors(options =>
-//{
-//    options.AddDefaultPolicy(
-//        policy =>
-//        {
-//            policy.WithOrigins("https://localhost:7154").AllowAnyHeader().AllowAnyMethod();
-//        });
-//});
+builder.Services.AddMemoryCache();
+builder.Services.AddSession(options =>
+{
+    options.IdleTimeout = TimeSpan.FromMinutes(30);
+    options.Cookie.HttpOnly = true;
+    options.Cookie.IsEssential = true;
+});
 
 builder.Services.Configure<StripeSettings>(builder.Configuration.GetSection("Stripe"));
 
@@ -74,11 +73,11 @@ app.UseStaticFiles();
 
 app.UseRouting();
 
-//app.UseCors();
-
 app.UseAuthentication();
 
 app.UseAuthorization();
+
+app.UseSession();
 
 StripeConfiguration.ApiKey = builder.Configuration.GetSection("Stripe:SecretKey").Get<string>();
 

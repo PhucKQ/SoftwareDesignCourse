@@ -2,8 +2,10 @@
 using AromaShop.Models.ViewModels;
 using AromaShop.Services;
 using AromaShop.Services.IRepository;
+using AromaShop.Ultility;
 using Microsoft.AspNetCore.Mvc;
 using System.Diagnostics;
+using System.Security.Claims;
 
 namespace AromaShop.Controllers
 {
@@ -21,6 +23,16 @@ namespace AromaShop.Controllers
         public IActionResult Index()
         {
             ViewBag.location = "home";
+
+            var claimsIdentity = (ClaimsIdentity)User.Identity;
+            var claim = claimsIdentity.FindFirst(ClaimTypes.NameIdentifier);
+
+            if (claim != null)
+            {
+                HttpContext.Session.SetInt32(Util.SessionCart,
+                    _unitOfWork.ShoppingCart.GetAll(u => u.UserId == claim.Value).Count());
+            }
+
             // get trending products
             IEnumerable<Product> trendingProducts = _unitOfWork.Product.GetAll(includeProperties: "Category")
                 .OrderByDescending(t => t.OverallReview).Take(8).ToList();

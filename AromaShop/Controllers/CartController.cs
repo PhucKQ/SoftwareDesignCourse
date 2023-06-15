@@ -40,6 +40,7 @@ namespace AromaShop.Controllers
                 OrderHeader = new()
                 {
                     OrderTotal = orderTotal,
+                    UserId = userId
                 }
             };
 
@@ -49,6 +50,9 @@ namespace AromaShop.Controllers
         [HttpPost]
         public IActionResult UpdateCart(ShoppingCartVM shoppingCartVM)
         {
+            var claims = (ClaimsIdentity)User.Identity;
+            var userId = claims.FindFirst(ClaimTypes.NameIdentifier).Value;
+
             shoppingCartVM.OrderHeader = new() { OrderTotal = 0 };
             foreach (var cart in shoppingCartVM.ShoppingCartList)
             {
@@ -71,6 +75,8 @@ namespace AromaShop.Controllers
                 }
             }
             _unitOfWork.Save();
+            HttpContext.Session.SetInt32(Util.SessionCart,
+                _unitOfWork.ShoppingCart.GetAll(u => u.UserId == userId).Count());
 
             return RedirectToAction(nameof(Index));
         }
@@ -239,6 +245,7 @@ namespace AromaShop.Controllers
                 _unitOfWork.OrderHeader.UpdateStatus(id, Util.StatusApproved, Util.PaymentStatusApproved);
                 _unitOfWork.Save();
             }
+            HttpContext.Session.Clear();
 
             var userId = _unitOfWork.OrderHeader.Get(u => u.Id == id).UserId;
             IEnumerable<ShoppingCart> shoppingCarts = _unitOfWork.ShoppingCart.GetAll(u => u.UserId == userId);

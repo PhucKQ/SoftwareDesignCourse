@@ -1,6 +1,7 @@
 ﻿using AromaShop.Models;
 using AromaShop.Models.ViewModels;
 using AromaShop.Services.IRepository;
+using AromaShop.Ultility;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 using System.Security.Claims;
@@ -185,10 +186,11 @@ namespace AromaShop.Controllers
                 // shopping cart exist
                 cartFromDb.Count += model.Count;
                 _unitOfWork.ShoppingCart.Update(cartFromDb);
+                _unitOfWork.Save();
             }
             else
             {
-                // add new record to table
+                // add new record to shoppingcart table
                 ShoppingCart shoppingCart = new()
                 {
                     ProductId = productId,
@@ -196,8 +198,10 @@ namespace AromaShop.Controllers
                     UserId = userId,
                 };
                 _unitOfWork.ShoppingCart.Add(shoppingCart);
+                _unitOfWork.Save();
+                HttpContext.Session.SetInt32(Util.SessionCart, 
+                    _unitOfWork.ShoppingCart.GetAll(u => u.UserId == userId).Count());
             }
-            _unitOfWork.Save();
 
             return RedirectToAction(nameof(Index));
         }

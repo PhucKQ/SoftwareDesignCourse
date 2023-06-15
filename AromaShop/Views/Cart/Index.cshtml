@@ -22,6 +22,7 @@
         <div class="cart_inner">
             <div class="table-responsive">
                 <form id="updateCart" asp-controller="Cart" asp-action="UpdateCart" method="post">
+                    <input asp-for="OrderHeader.UserId" hidden />
                     <table class="table">
                         <thead>
                             <tr>
