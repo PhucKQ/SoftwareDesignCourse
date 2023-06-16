@@ -39,7 +39,14 @@
                         </tr>
                         <tr>
                             <td>Payment method</td>
-                            <td>: Check payments</td>
+                            @if (Model.OrderHeader.PaymentIntentId == null)
+                            {
+                                <td>: Check payments</td>
+                            }
+                            else
+                            {
+                                <td>: Paid with Stripe</td>
+                            }
                         </tr>
                     </table>
                 </div>

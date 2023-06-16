@@ -145,24 +145,18 @@
                                 <div class="radion_btn">
                                     <input type="radio" id="f-option5" name="selector" onclick="showSubmitButton()">
                                     <label for="f-option5">Proceed to Stripe</label>
+                                    <img src="/img/stripe.png" alt="stripeIcon" style="width: 80px; height:40px;">
                                     <div class="check"></div>
                                 </div>
-                                <p>
-                                    Please send a check to Store Name, Store Street, Store Town, Store State / County,
-                                    Store Postcode.
-                                </p>
+                                <p>Pay via Stripe; you can pay with your credit card if you don’t have a Stripe account.</p>
                             </div>
                             <div class="payment_item active">
                                 <div class="radion_btn">
                                     <input type="radio" id="f-option6" name="selector" onclick="showSubmitButton()">
                                     <label for="f-option6">Check payment </label>
-                                    <img src="" alt="stripeIcon">
                                     <div class="check"></div>
                                 </div>
-                                <p>
-                                    Pay via Stripe; you can pay with your credit card if you don’t have a Stripe
-                                    account.
-                                </p>
+                                <p>Please send a check to Store Name, Store Street, Store Town, Store State / County, Store Postcode.</p>
                             </div>
                             <!--<div class="creat_account">
                                 <input type="checkbox" id="f-option4" name="selector">
@@ -170,9 +164,7 @@
                                 <a href="#">terms & conditions*</a>
                             </div>-->
                             <div class="text-center">
-                                <a id="stripeBtn" class="button button-paypal text-white" style="display:none; cursor: pointer;">
-                                    Place Order
-                                </a>
+                                <a id="codBtn" class="button button-paypal text-white" style="display:none; cursor: pointer;">Place Order</a>
                                 <input id="submitBtn" type="submit" class="button button-paypal" value="Proceed to Stripe" style="display: none; cursor: pointer;">
                             </div>
                         </div>
@@ -190,15 +182,15 @@
     <script>
         function showSubmitButton() {
             var checkPaymentRadio = document.getElementById("f-option5");
-            var paypalPaymentRadio = document.getElementById("f-option6");
+            var stripePaymentRadio = document.getElementById("f-option6");
             var submitButton = document.getElementById("submitBtn");
-            var paypalButton = document.getElementById("stripeBtn");
+            var codButton = document.getElementById("codBtn");
 
             if (checkPaymentRadio.checked) {
-                paypalButton.style.display = "none";
+                codButton.style.display = "none";
                 submitButton.style.display = "block";
-            } else if (paypalPaymentRadio.checked) {
-                paypalButton.style.display = "block";
+            } else if (stripePaymentRadio.checked) {
+                codButton.style.display = "block";
                 submitButton.style.display = "none";
             }
         }
@@ -206,8 +198,8 @@
         $(document).ready(function () {
             $("#infoForm").validate();
 
-            $("#stripeBtn").click(function (event) {
-                event.preventDefault(); // Prevent the default link behavior
+            $("#codBtn").click(function (event) {
+                event.preventDefault(); // prevent the default link behavior
 
                 var form = $("#infoForm");
                 if (form.valid()) {
@@ -219,18 +211,13 @@
                         data: formData,
                         processData: false,
                         contentType: false,
-                        xhrFields: {
-                            withCredentials: true
-                        },
                         success: function (response) {
                             // Handle the response from the server
-                            // ...
+                            window.location.href = response.redirectUrl;
                         }
                     });
                 }
             });
         });
-
-
     </script>
 }

@@ -113,7 +113,7 @@ namespace AromaShop.Controllers
             model.ShoppingCartList = _unitOfWork.ShoppingCart.GetAll(u => u.UserId == userId).ToList();
 
             // fill in OrderHeader fields to add a new record
-            model.OrderHeader.OrderDate = System.DateTime.Now;
+            model.OrderHeader.OrderDate = DateTime.Now;
             model.OrderHeader.UserId = userId;
             //User user = _unitOfWork.User.Get(u => u.Id == userId); 
             //model.OrderHeader.User = user; // can not be assigned directly because of EFcore mechanism
@@ -141,9 +141,12 @@ namespace AromaShop.Controllers
                     Quantity = cart.Count
                 };
                 _unitOfWork.OrderDetail.Add(orderDetail);
-                _unitOfWork.Save();
             }
-            return RedirectToAction(nameof(OrderConfirmation), new { id = model.OrderHeader.Id });
+            _unitOfWork.Save();
+            var orderConfirmationUrl = Url.Action("OrderConfirmation", "Cart", new { id = model.OrderHeader.Id, isCod = true });
+            return Json(new { redirectUrl = orderConfirmationUrl });
+            //return RedirectToAction(nameof(OrderConfirmation), new { id = model.OrderHeader.Id, isCod = true });
+            //return Json(new { redirectToUrl = $"/Cart/OrderConfirmation/id={model.OrderHeader.Id}&isCod=true" });
         }
 
         [HttpPost]
@@ -155,7 +158,7 @@ namespace AromaShop.Controllers
             model.ShoppingCartList = _unitOfWork.ShoppingCart.GetAll(u => u.UserId == userId).ToList();
 
             // fill in OrderHeader fields to add a new record
-            model.OrderHeader.OrderDate = System.DateTime.Now;
+            model.OrderHeader.OrderDate = DateTime.Now;
             model.OrderHeader.UserId = userId;
 
             foreach (var cart in model.ShoppingCartList)
@@ -220,7 +223,7 @@ namespace AromaShop.Controllers
             return new StatusCodeResult(303);
         }
 
-        public IActionResult OrderConfirmation(int id)
+        public IActionResult OrderConfirmation(int id, bool isCod = false)
         {
             var orderHeader = _unitOfWork.OrderHeader.Get(u => u.Id == id);
             var orderDetails = _unitOfWork.OrderDetail.GetAll(u => u.OrderHeaderId == id);
@@ -235,15 +238,18 @@ namespace AromaShop.Controllers
                 OrderDetails = orderDetails,
             };
 
-            // check Stripe payment status
-            var service = new SessionService();
-            Session session = service.Get(orderHeader.SessionId);
-
-            if (session.PaymentStatus.ToLower() == "paid")
+            if (!isCod)
             {
-                _unitOfWork.OrderHeader.UpdateStripePaymentId(id, session.Id, session.PaymentIntentId);
-                _unitOfWork.OrderHeader.UpdateStatus(id, Util.StatusApproved, Util.PaymentStatusApproved);
-                _unitOfWork.Save();
+                // check Stripe payment status
+                var service = new SessionService();
+                Session session = service.Get(orderHeader.SessionId);
+
+                if (session.PaymentStatus.ToLower() == "paid")
+                {
+                    _unitOfWork.OrderHeader.UpdateStripePaymentId(id, session.Id, session.PaymentIntentId);
+                    _unitOfWork.OrderHeader.UpdateStatus(id, Util.StatusApproved, Util.PaymentStatusApproved);
+                    _unitOfWork.Save();
+                }
             }
             HttpContext.Session.Clear();
 
