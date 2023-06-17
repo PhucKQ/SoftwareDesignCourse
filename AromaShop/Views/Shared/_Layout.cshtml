@@ -39,6 +39,7 @@
                             <li id="home" class="nav-item"><a class="nav-link" asp-area="Default" asp-controller="Home" asp-action="Index">Home</a></li>
                             <li id="shop" class="nav-item"><a class="nav-link" asp-area="Default" asp-controller="Product" asp-action="Index">Shop Category</a></li>
 
+                            <!--
                             <li id="blog" class="nav-item submenu dropdown">
                                 <a href="#" class="nav-link dropdown-toggle" data-toggle="dropdown" role="button" aria-haspopup="true"
                                    aria-expanded="false">Blog</a>
@@ -47,12 +48,12 @@
                                     <li class="nav-item"><a class="nav-link" href="#">Blog Details</a></li>
                                 </ul>
                             </li>
-
+                            -->
                             <li id="contact" class="nav-item"><a class="nav-link" asp-area="Default" asp-controller="Home" asp-action="Contact">Contact</a></li>
                         </ul>
 
                         <ul class="nav-shop">
-                            <li class="nav-item"><button><i class="ti-search"></i></button></li>
+                            <li class="nav-item"><a asp-area="Default" asp-controller="Home" asp-action="MyOrder"><i class="ti-receipt"></i></a></li>
                             @if (HttpContextAccessor.HttpContext.Session.GetInt32(AromaShop.Ultility.Util.SessionCart) != null)
                             {
                                 <li class="nav-item">

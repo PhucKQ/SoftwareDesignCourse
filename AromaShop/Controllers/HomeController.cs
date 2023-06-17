@@ -40,6 +40,54 @@ namespace AromaShop.Controllers
             return View(trendingProducts);
         }
 
+        public IActionResult MyOrder(string? status = "all", int pageNumber = 1)
+        {
+            var claimsIdentity = (ClaimsIdentity)User.Identity;
+            var userId = claimsIdentity.FindFirst(ClaimTypes.NameIdentifier).Value;
+
+            List<OrderVM> orderList = new();
+            IEnumerable<OrderHeader> orderHeaders = _unitOfWork.OrderHeader.GetAll(u => u.UserId == userId);
+            foreach (var header in orderHeaders)
+            {
+                OrderVM order = new()
+                {
+                    OrderHeader = header,
+                    OrderDetails = _unitOfWork.OrderDetail.GetAll (u => u.OrderHeaderId == header.Id)
+                };
+                foreach (var detail in order.OrderDetails)
+                {
+                    detail.Product = _unitOfWork.Product.Get(u => u.Id == detail.ProductId);
+                }
+                orderList.Add(order);
+            }
+
+            switch (status)
+            {
+                case "pending":
+                    orderList = orderList.Where(u => u.OrderHeader.OrderStatus == Util.StatusPending).ToList();
+                    break;
+                case "approved":
+                    orderList = orderList.Where(u => u.OrderHeader.OrderStatus == Util.StatusApproved).ToList();
+                    break;
+                case "inprocess":
+                    orderList = orderList.Where(u => u.OrderHeader.OrderStatus == Util.StatusInProcess).ToList();
+                    break;
+                case "shipped":
+                    orderList = orderList.Where(u => u.OrderHeader.OrderStatus == Util.StatusShipped).ToList();
+                    break;
+                case "cancelled":
+                    orderList = orderList.Where(u => u.OrderHeader.OrderStatus == Util.StatusCancelled).ToList();
+                    break;
+                case "refunded":
+                    orderList = orderList.Where(u => u.OrderHeader.OrderStatus == Util.StatusRefunded).ToList();
+                    break;
+            }
+
+            PaginatedList<OrderVM> paginatedOrders = PaginatedList<OrderVM>.Create(orderList, pageNumber, 5);
+
+            return View(paginatedOrders);
+        }
+
         public IActionResult Contact()
         {
             ViewBag.location = "contact";

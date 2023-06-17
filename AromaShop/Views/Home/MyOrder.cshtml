@@ -1,0 +1,230 @@
+﻿@model PaginatedList<OrderVM>
+
+@{
+    var status = Context.Request.Query["status"];
+    string pending = "text-dark";
+    string inprocess = "text-dark";
+    string shipped = "text-dark";
+    string approved = "text-dark";
+    string cancelled = "text-dark";
+    string refunded = "text-dark";
+    string all = "text-dark";
+
+    switch (status)
+    {
+        case "pending":
+            pending = "active text-white bg-primary";
+            break;
+        case "approved":
+            approved = "active text-white bg-primary";
+            break;
+        case "inprocess":
+            inprocess = "active text-white bg-primary";
+            break;
+        case "shipped":
+            shipped = "active text-white bg-primary";
+            break;
+        case "cancelled":
+            cancelled = "active text-white bg-primary";
+            break;
+        case "refunded":
+            refunded = "active text-white bg-primary";
+            break;
+        default:
+            all = "active text-white bg-primary";
+            break;
+    }
+}
+
+<div class="container">
+    <div class="card shadow border-0">
+
+        <div class="card-header bg-secondary bg-gradient text-light ml-0 py-4">
+            <div class="row">
+                <div class="col text-right">
+                    <a asp-action="Index" class="btn btn-outline-danger btn-sm">Back to Homepage</a>
+                </div>
+            </div>
+            <div class="row px-4">
+                <div class="col text-center">
+                    <h2 class="pt-2 text-white">Order List</h2>
+                </div>
+            </div>
+
+            <div class="row px-3">
+                <ul class="list-group-horizontal">
+                    <a style="text-decoration: none" asp-controller="Home" asp-action="MyOrder" asp-route-status="pending">
+                    <li class="list-group-item @pending">Pending</li>
+                    </a>
+                    <a style="text-decoration: none" asp-controller="Home" asp-action="MyOrder" asp-route-status="inprocess">
+                    <li class="list-group-item @inprocess">In Process</li>
+                    </a>
+                    <a style="text-decoration: none" asp-controller="Home" asp-action="MyOrder" asp-route-status="approved">
+                    <li class="list-group-item @approved">Approved</li>
+                    </a>
+                    <a style="text-decoration: none" asp-controller="Home" asp-action="MyOrder" asp-route-status="shipped">
+                    <li class="list-group-item @shipped">Shipped</li>
+                    </a>
+                    <a style="text-decoration: none" asp-controller="Home" asp-action="MyOrder" asp-route-status="cancelled">
+                    <li class="list-group-item @cancelled">Cancelled</li>
+                    </a>
+                    <a style="text-decoration: none" asp-controller="Home" asp-action="MyOrder" asp-route-status="refunded">
+                    <li class="list-group-item @refunded">Refunded</li>
+                    </a>
+                    <a style="text-decoration: none" asp-controller="Home" asp-action="MyOrder" asp-route-status="all">
+                    <li class="list-group-item @all">All</li>
+                    </a>
+                </ul>
+            </div>
+
+        </div>
+    </div>
+
+
+    @foreach (var item in Model)
+    {
+        <div class="card-body">
+            <div class="container rounded p-2">
+                <div class="row">
+                    <div class="col-12 col-lg-6 pb-4">
+                        <div class="row">
+                            <h4 class="d-flex justify-content-between align-items-center mb-3">
+                                <span class="text-info">Shipping Details:</span>
+                            </h4>
+                        </div>
+                        <div class="row my-1">
+                            <div class="col-3">
+                                <label>First Name</label>
+                            </div>
+                            <div class="col-9">
+                                <input class="form-control" asp-for="@item.OrderHeader.FirstName" readonly />
+                            </div>
+                        </div>
+                        <div class="row my-1">
+                            <div class="col-3">
+                                <label>Last Name</label>
+                            </div>
+                            <div class="col-9">
+                                <input class="form-control" asp-for="@item.OrderHeader.LastName" readonly />
+                            </div>
+                        </div>
+                        <div class="row my-1">
+                            <div class="col-3">
+                                <label>Phone</label>
+                            </div>
+                            <div class="col-9">
+                                <input class="form-control" asp-for="@item.OrderHeader.PhoneNumber" readonly />
+                            </div>
+                        </div>
+                        <div class="row my-1">
+                            <div class="col-3">
+                                <label>Street Address</label>
+                            </div>
+                            <div class="col-9">
+                                <input class="form-control" asp-for="@item.OrderHeader.StreetAddress" readonly />
+                            </div>
+                        </div>
+                        <div class="row my-1">
+                            <div class="col-3">
+                                <label>City</label>
+                            </div>
+                            <div class="col-9">
+                                <input class="form-control" asp-for="@item.OrderHeader.City" readonly />
+                            </div>
+                        </div>
+                        <div class="row my-1">
+                            <div class="col-3">
+                                <label>State</label>
+                            </div>
+                            <div class="col-9">
+                                <input class="form-control" asp-for="@item.OrderHeader.State" readonly />
+                            </div>
+                        </div>
+                        <div class="row my-1">
+                            <div class="col-3">
+                                <label>Postal Code</label>
+                            </div>
+                            <div class="col-9">
+                                <input class="form-control" asp-for="@item.OrderHeader.PostalCode" readonly />
+                            </div>
+                        </div>
+                    </div>
+
+                    <div class="col-12 col-lg-5 offset-lg-1">
+                        <h4 class="d-flex justify-content-between align-items-center mb-3">
+                            <span class="text-info">Order Summary: </span>
+                        </h4>
+                        <div>
+                            Order Status:
+                            @{ string orderStatus = @item.OrderHeader.OrderStatus;}
+                            @if (orderStatus == AromaShop.Ultility.Util.StatusCancelled)
+                            {
+                                <span class="badge badge-pill badge-danger">@orderStatus</span>
+                            }
+                            else if (orderStatus == AromaShop.Ultility.Util.StatusRefunded)
+                            {
+                                <span class="badge badge-pill badge-warning">@orderStatus</span>
+                            }
+                            else if (orderStatus == AromaShop.Ultility.Util.StatusShipped)
+                            {
+                                <span class="badge badge-pill badge-success">@orderStatus</span>
+                            }
+                            else
+                            {
+                                <span class="badge badge-pill badge-secondary">@orderStatus</span>
+                            }
+                        </div>
+                        <ul class="list-group mb-3">
+                            @foreach (var detail in item.OrderDetails)
+                            {
+                                <li class="list-group-item d-flex justify-content-between">
+                                    <div>
+                                        <h6 class="my-0">@detail.Product.Name</h6>
+                                        <small class="text-muted">Quantity: @detail.Quantity</small>
+                                    </div>
+                                    <span class="text-muted">@((detail.Price * detail.Quantity).ToString("c")) </span>
+                                </li>
+                            }
+
+                            <li class="list-group-item d-flex justify-content-between bg-light">
+                                <small class="text-info">Total (USD)</small>
+                                <strong class="text-info">@item.OrderHeader.OrderTotal.ToString("c")</strong>
+                            </li>
+                        </ul>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <div class="card-footer">
+            <div class="row">
+                <div class="col-12 col-md-8 pt-2">
+                    <p style="color:maroon; font-size:14px;">
+                        Estimate Arrival Date:
+                        @item.OrderHeader.OrderDate.AddDays(7).ToShortDateString() - @item.OrderHeader.OrderDate.AddDays(14).ToShortDateString()
+                    </p>
+                </div>
+            </div>
+        </div>
+    }
+
+    <!-- Pagination -->
+    <div class="row justify-content-center">
+        @{
+            var disablePrevious = !Model.HasPreviousPage ? "disabled" : "";
+            var disableNext = !Model.HasNextPage ? "disabled" : "";
+        }
+        <nav aria-label="Page navigation example" id="pagination">
+            <ul class="pagination">
+                <li class="page-item  @disablePrevious"><a class="page-link" asp-route-pageNumber="@(Model.PageIndex - 1)">Previous</a></li>
+                @for (int i = 1; i <= Model.TotalPages; i++)
+                {
+                    <li @Html.Raw(Model.PageIndex == i ? "class=\"page-item active\"" : "class=\"page-item\"")>
+                        <a class="page-link" asp-route-pageNumber="@i">@i</a>
+                    </li>
+                }
+                <li class="page-item @disableNext"><a class="page-link" asp-route-pageNumber="@(Model.PageIndex + 1)">Next</a></li>
+            </ul>
+        </nav>
+    </div>
+</div>
