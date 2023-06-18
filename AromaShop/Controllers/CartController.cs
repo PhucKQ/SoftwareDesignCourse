@@ -115,17 +115,13 @@ namespace AromaShop.Controllers
             // fill in OrderHeader fields to add a new record
             model.OrderHeader.OrderDate = DateTime.Now;
             model.OrderHeader.UserId = userId;
-            //User user = _unitOfWork.User.Get(u => u.Id == userId); 
-            //model.OrderHeader.User = user; // can not be assigned directly because of EFcore mechanism
-
             foreach (var cart in model.ShoppingCartList)
             {
                 cart.Product = _unitOfWork.Product.Get(u => u.Id == cart.ProductId);
                 model.OrderHeader.OrderTotal += cart.Product.Price * cart.Count;
             }
-
-            model.OrderHeader.PaymentStatus = Util.PaymentStatusPending;
-            model.OrderHeader.OrderStatus = Util.StatusPending;
+            model.OrderHeader.PaymentStatus = Util.PaymentStatusCOD;
+            model.OrderHeader.OrderStatus = Util.StatusApproved;
 
             _unitOfWork.OrderHeader.Add(model.OrderHeader);
             _unitOfWork.Save();
@@ -145,8 +141,6 @@ namespace AromaShop.Controllers
             _unitOfWork.Save();
             var orderConfirmationUrl = Url.Action("OrderConfirmation", "Cart", new { id = model.OrderHeader.Id, isCod = true });
             return Json(new { redirectUrl = orderConfirmationUrl });
-            //return RedirectToAction(nameof(OrderConfirmation), new { id = model.OrderHeader.Id, isCod = true });
-            //return Json(new { redirectToUrl = $"/Cart/OrderConfirmation/id={model.OrderHeader.Id}&isCod=true" });
         }
 
         [HttpPost]

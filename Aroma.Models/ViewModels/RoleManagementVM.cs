@@ -8,7 +8,7 @@ using System.Threading.Tasks;
 
 namespace AromaShop.Models.ViewModels
 {
-    public class UserCreateOrUpdateVM
+    public class RoleManagementVM
     {
         public required User User { get; set; }
 

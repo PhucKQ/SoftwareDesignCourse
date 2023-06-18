@@ -62,6 +62,7 @@ namespace AromaShop.Ultility
         public const string PaymentStatusApproved = "Approved";
         public const string PaymentStatusDelayedPayment = "ApprovedForDelayedPayment";
         public const string PaymentStatusRejected = "Rejected";
+        public const string PaymentStatusCOD = "CashOnDelivery";
 
         public const string SessionCart = "SessionShoppingCart";
     }

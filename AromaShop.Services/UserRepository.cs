@@ -17,5 +17,10 @@ namespace AromaShop.Services
         {
             _db = db;
         }
+
+        public void Update(User obj)
+        {
+            _db.Users.Update(obj);
+        }
     }
 }

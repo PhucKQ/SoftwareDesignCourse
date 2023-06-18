@@ -98,7 +98,7 @@ namespace AromaShop.Areas.Admin.Controllers
             orderHeader.OrderStatus = Util.StatusShipped;
             orderHeader.ShippingDate = DateTime.Now;
 
-            _unitOfWork.OrderHeader.Update(model.OrderHeader);
+            _unitOfWork.OrderHeader.Update(orderHeader);
             _unitOfWork.Save();
 
             TempData["success"] = "Order Details Updated Successfully";
@@ -127,7 +127,7 @@ namespace AromaShop.Areas.Admin.Controllers
             }
             else
             {
-                _unitOfWork.OrderHeader.UpdateStatus(model.OrderHeader.Id, Util.StatusCancelled, Util.StatusRefunded);
+                _unitOfWork.OrderHeader.UpdateStatus(model.OrderHeader.Id, Util.StatusCancelled, Util.StatusCancelled);
             }
             _unitOfWork.Save();
 
