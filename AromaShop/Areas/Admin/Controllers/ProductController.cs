@@ -1,6 +1,7 @@
 ﻿using AromaShop.Models;
 using AromaShop.Models.ViewModels;
 using AromaShop.Services.IRepository;
+using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Hosting;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Mvc.Rendering;
@@ -9,6 +10,8 @@ using static System.Runtime.InteropServices.JavaScript.JSType;
 namespace AromaShop.Areas.Admin.Controllers
 {
     [Area("Admin")]
+    [Authorize(Roles = Ultility.Util.Role_Admin + "," + Ultility.Util.Role_Employee)]
+
     public class ProductController : Controller
     {
         private readonly IUnitOfWork _unitOfWork;

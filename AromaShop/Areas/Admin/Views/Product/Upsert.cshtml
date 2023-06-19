@@ -69,15 +69,6 @@
                             <span asp-validation-for="ColorIds" class="text-danger"></span>
                         </div>
 
-                        <!--foreach (var spec in Model.Specs)
-                        {
-                            <div class="form-floating py-2 col-3">
-                                <input type="text" name="spec.Name" id="spec.Id" class="form-control border-0 shadow" />
-                                <label for="spec.Id" class="ms-2">spec.Name</label>-->
-                                @*<span asp-validation-for="spec.Id" class="text-danger"></span>*@
-                            <!--</div>
-                        }-->
-
                         @for (int i = 0; i < Model.SpecDetails.Count(); i++)
                         {
                             <div class="form-floating py-2 col-3">

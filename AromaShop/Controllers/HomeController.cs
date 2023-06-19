@@ -83,6 +83,8 @@ namespace AromaShop.Controllers
                     break;
             }
 
+            orderList = orderList.OrderByDescending(u => u.OrderHeader.OrderDate).ToList();
+
             PaginatedList<OrderVM> paginatedOrders = PaginatedList<OrderVM>.Create(orderList, pageNumber, 5);
 
             return View(paginatedOrders);

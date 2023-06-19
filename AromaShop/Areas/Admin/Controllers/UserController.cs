@@ -2,6 +2,7 @@
 using AromaShop.Models.ViewModels;
 using AromaShop.Services.IRepository;
 using AromaShop.Ultility;
+using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Hosting;
 using Microsoft.AspNetCore.Identity;
 using Microsoft.AspNetCore.Mvc;
@@ -10,6 +11,8 @@ using Microsoft.AspNetCore.Mvc.Rendering;
 namespace AromaShop.Areas.Admin.Controllers
 {
     [Area("Admin")]
+    [Authorize(Roles = Ultility.Util.Role_Admin)]
+
     public class UserController : Controller
     {
         private readonly IUnitOfWork _unitOfWork;

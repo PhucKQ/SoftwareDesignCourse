@@ -39,7 +39,7 @@
                         </tr>
                         <tr>
                             <td>Payment method</td>
-                            @if (Model.OrderHeader.PaymentIntentId == null)
+                            @if (string.IsNullOrEmpty(Model.OrderHeader.PaymentIntentId))
                             {
                                 <td>: Check payments</td>
                             }

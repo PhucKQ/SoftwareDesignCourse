@@ -1,11 +1,13 @@
 ﻿using AromaShop.Models;
 using AromaShop.Services.IRepository;
+using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Hosting;
 using Microsoft.AspNetCore.Mvc;
 
 namespace AromaShop.Areas.Admin.Controllers
 {
     [Area("Admin")]
+    [Authorize(Roles = Ultility.Util.Role_Admin + "," + Ultility.Util.Role_Employee)]
     public class BrandController : Controller
     {
         private readonly IUnitOfWork _unitOfWork;

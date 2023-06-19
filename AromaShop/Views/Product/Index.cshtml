@@ -94,37 +94,10 @@
             <div class="col-xl-9 col-lg-8 col-md-7">
                 <!-- Start Filter Bar -->
                 <div class="filter-bar d-flex flex-wrap align-items-center">
-                    @*<div class="mr-auto d-flex flex-fill">
-            @{ if (ViewData["SortOrder"] == null) ViewData["SortOrder"] = ""; }
-            <form asp-controller="Product" asp-action="Index" method="get">
-                <div class="row">
-                    <div class="sorting">
-                        <select name="sortOrder" onchange="this.form.submit()">
-                            <option value="" selected="@(ViewData["SortOrder"].ToString() == "")">Default</option>
-                            <option value="top" selected="@(ViewData["SortOrder"].ToString() == "top")">Top seller</option>
-                            <option value="price" selected="@(ViewData["SortOrder"].ToString() == "price")">Price (Low to High)</option>
-                            <option value="price_desc" selected="@(ViewData["SortOrder"].ToString() == "price_desc")">Price (High to Low)</option>
-                        </select>
-                    </div>
-
-                    <div class="sorting">
-                        <select name="pageSize" onchange="this.form.submit()">
-                            <option value="9" selected="@(ViewData["PageSize"].ToString() == "9")">Show 9</option>
-                            <option value="18" selected="@(ViewData["PageSize"].ToString() == "18")">Show 18</option>
-                            <option value="36" selected="@(ViewData["PageSize"].ToString() == "36")">Show 36</option>
-                        </select>
-                    </div>
-                </div>
-            </form>
-        </div>*@
-                    @*<div>
-            <a asp-action="Index" asp-route-sortOrder="@ViewData["SortOrder"]">asc</a>
-            <a asp-action="Index" asp-route-sortOrder="@ViewData["SortOrder"]">desc</a>
-        </div>*@
                     <div class="sorting">
                         <select id="sort" onchange="selectParam('sort', this.value)">
                             <option value="name">Default sorting by name</option>
-                            <option value="price">Sorting by price (low to high)</option>
+                            <option value="price" >Sorting by price (low to high)</option>
                             <option value="price_desc">Sorting by price (high to low)</option>
                         </select>
                     </div>
@@ -138,7 +111,7 @@
                     <div>
                         <form asp-action="Index" method="get">
                             <div class="input-group filter-bar-search">
-                                <input type="text" placeholder="Search" name="search" value="@ViewData["CurrentFilter"]">
+                                <input type="text" placeholder="Search" name="search" value="@ViewData["search"]">
                                 <div class="input-group-append">
                                     <button type="submit"><i class="ti-search"></i></button>
                                 </div>
@@ -155,7 +128,7 @@
                             <div class="col-md-6 col-lg-4">
                                 <div class="card text-center card-product">
                                     <div class="card-product__img">
-                                        <img class="card-img" src="@item.ImagePath" alt="">
+                                        <img class="card-img" src="@item.ImagePath" alt="" width="248" height="263">
                                         <ul class="card-product__imgOverlay">
                                             <li><button><i class="ti-search"></i></button></li>
                                             <li><button><i class="ti-shopping-cart"></i></button></li>
@@ -186,7 +159,7 @@
                                 @for (int i = 1; i <= Model.PaginatedProducts.TotalPages; i++)
                                 {
                                     <li @Html.Raw(Model.PaginatedProducts.PageIndex == i ? "class=\"page-item active\"" : "class=\"page-item\"")>
-                                        <a class="page-link" asp-route-page="@i" asp-route-currentFilter="@ViewData["CurrentSearch"]">@i</a>
+                                        <a class="page-link" asp-route-page="@i" asp-route-search="@ViewData["search"]">@i</a>
                                     </li>
                                 }
                                 <li class="page-item @disableNext"><a class="page-link" asp-route-page="@(Model.PaginatedProducts.PageIndex + 1)">Next</a></li>
@@ -251,10 +224,6 @@
             // thiết lập trạng thái cho combo box sort và limit
             $('#sort').val(urlParams.get('sort'));
             $('#limit').val(urlParams.get('limit'));
-
-            // thiết lập trạng thái và đường dẫn href cho các link của pagination
-            //$('#pagination li').addClass('page-item');
-            //$('#pagination li a').addClass('page-link');
 
             let savePage = urlParams.get('page');
             $('#pagination li a').each((index, item) => {

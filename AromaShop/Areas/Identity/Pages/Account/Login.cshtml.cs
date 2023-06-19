@@ -120,8 +120,9 @@ namespace AromaShop.Areas.Identity.Pages.Account
                 {
                     _logger.LogInformation("User logged in.");
                     
-                    var user = await _userManager.FindByEmailAsync(Input.Email);
-                    if (_userManager.IsInRoleAsync(user, Util.Role_Admin).GetAwaiter().GetResult())
+                    var user = await _userManager.FindByNameAsync(Input.Email);
+                    if (_userManager.IsInRoleAsync(user, Util.Role_Admin).GetAwaiter().GetResult() ||
+                        _userManager.IsInRoleAsync(user, Util.Role_Employee).GetAwaiter().GetResult())
                     {
                         returnUrl = "/Admin/Home/Index";
                     }

@@ -10,6 +10,8 @@ using System.Diagnostics;
 namespace AromaShop.Areas.Admin.Controllers
 {
     [Area("Admin")]
+    [Authorize(Roles = Ultility.Util.Role_Admin + "," + Ultility.Util.Role_Employee)]
+
     public class OrderController : Controller
     {
         private readonly IUnitOfWork _unitOfWork;
